@@ -4,16 +4,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Mokuroku (目録) is a website for displaying ogadra's speaking schedule and upcoming events.
+Mokuroku (目録) is a website for displaying ogadra's speaking schedule and upcoming events. Built with Hono on Cloudflare Workers.
 
 ## Development Environment
 
-This project uses Nix flakes for development environment management.
+This project uses Nix flakes with direnv. Requires `programs.nix-ld.enable = true` in NixOS config.
 
 ```bash
-# Enter development shell
-nix develop
+# Initial setup
+make init
 
-# Build the project
-nix build
+# Install dependencies
+pnpm install
+
+# Start local development server
+pnpm dev
+
+# Type check
+pnpm typecheck
+
+# Deploy to Cloudflare Workers
+pnpm deploy
 ```
+
+## Architecture
+
+- **Runtime**: Cloudflare Workers
+- **Framework**: Hono
+- **Entry point**: `src/index.ts`
+- **Config**: `wrangler.jsonc`
