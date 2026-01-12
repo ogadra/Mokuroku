@@ -33,3 +33,10 @@ pnpm deploy
 - **Framework**: Hono
 - **Entry point**: `src/index.ts`
 - **Config**: `wrangler.jsonc`
+
+## Testing Guidelines
+
+- Keep tests for the same endpoint in a single `it` block (avoid duplicate requests)
+- Add Japanese description as the second argument of `expect` (must be a complete sentence)
+  - Example: `expect(response.status, "ステータスコードが200であること").toBe(200)`
+- Verify response content with exact match using `toBe`, not `toContain` (preserve order and full content)
