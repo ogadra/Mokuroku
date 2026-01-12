@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { drizzle } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
 import { events } from "./repository/schema";
+import type { Event, NewEvent } from "./repository/types/events";
 
 export interface Env {
   DB: D1Database;
@@ -18,8 +19,6 @@ function formatDateUTC(date: Date): string {
   const seconds = String(date.getUTCSeconds()).padStart(2, "0");
   return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
 }
-
-type Event = typeof events.$inferSelect;
 
 function generateICS(eventList: Event[]): string {
   const lines = [
@@ -100,13 +99,9 @@ app.post("/event", async (c) => {
   const result = await db
     .insert(events)
     .values({
-      summary: body.summary,
-      description: body.description,
-      location: body.location,
-      dtstart: new Date(body.dtstart),
-      dtend: new Date(body.dtend),
-      status: body.status,
-      class: body.class,
+      ...body,
+      ...(body.dtstart ? { dtstart: new Date(body.dtstart) } : {}),
+      ...(body.dtend ? { dtend: new Date(body.dtend) } : {}),
     })
     .returning();
   return c.json(result[0], 201);
@@ -118,13 +113,15 @@ app.put("/event/:uid", async (c) => {
   const uid = c.req.param("uid");
   const body = await c.req.json();
 
-  const updateData: typeof events.$inferInsert = {
-    ...body,
-    ...(body.dtstart ? { dtstart: new Date(body.dtstart) } : {}),
-    ...(body.dtend ? { dtend: new Date(body.dtend) } : {}),
-  };
-
-  const result = await db.update(events).set(updateData).where(eq(events.uid, uid)).returning();
+  const result = await db
+    .update(events)
+    .set({
+      ...body,
+      ...(body.dtstart ? { dtstart: new Date(body.dtstart) } : {}),
+      ...(body.dtend ? { dtend: new Date(body.dtend) } : {}),
+    })
+    .where(eq(events.uid, uid))
+    .returning();
 
   if (result.length === 0) {
     return c.json({ error: "Event not found" }, 404);
