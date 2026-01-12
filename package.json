@@ -2,19 +2,20 @@
   "name": "Mokuroku",
   "version": "1.0.0",
   "description": "Speaking schedule website",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "typecheck": "tsc --noEmit",
     "typegen": "wrangler types",
     "generate": "drizzle-kit generate",
     "migrate": "wrangler d1 migrations apply mokuroku --local",
     "db:studio": "npx cross-env LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.26.1",
   "dependencies": {
     "@std/uuid": "jsr:^1.1.0",
     "drizzle-orm": "^0.45.1",
@@ -24,7 +25,9 @@
     "@cloudflare/workers-types": "^4.20260103.0",
     "@libsql/client": "^0.17.0",
     "drizzle-kit": "^0.31.8",
+    "oxfmt": "^0.24.0",
     "typescript": "^5.9.3",
     "wrangler": "^4.54.0"
-  }
+  },
+  "packageManager": "pnpm@10.26.1"
 }
