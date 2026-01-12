@@ -41,7 +41,7 @@ export const events = sqliteTable("events", {
     enum: Object.values(EVENT_CLASS) as [string, ...string[]],
   })
     .$type<EventClassType>()
-    .default("PUBLIC")
+    .default(EVENT_CLASS.PUBLIC)
     .notNull(),
 
   /** @description Timestamp when the event was created (RFC5545 CREATED) */
