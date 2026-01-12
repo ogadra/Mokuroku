@@ -5,13 +5,32 @@ const app = new Hono()
 // サンプルイベントデータ
 const events = [
   {
-    uid: '1@mokuroku',
-    summary: 'サンプル登壇',
+    uid: '13@mokuroku',
+    summary: '13-public',
     description: 'サンプルの登壇予定です',
     location: 'オンライン',
-    start: new Date('2026-02-01T14:00:00+09:00'),
-    end: new Date('2026-02-01T15:00:00+09:00'),
+    start: new Date('2026-01-11T22:55:00+09:00'),
+    end: new Date('2026-01-11T23:00:00+09:00'),
+    class: 'PUBLIC',
   },
+  {
+    uid: '14-private',
+    summary: '14-private',
+    description: 'サンプルの登壇予定です',
+    location: 'オンライン',
+    start: new Date('2026-02-15T10:00:00+09:00'),
+    end: new Date('2026-02-15T11:00:00+09:00'),
+    class: 'PRIVATE',
+  },
+  {
+    uid: '15-confidential',
+    summary: '15-confidential',
+    description: 'サンプルの登壇予定です',
+    location: 'オンライン',
+    start: new Date('2026-03-20T14:30:00+09:00'),
+    end: new Date('2026-03-20T15:30:00+09:00'),
+    class: 'CONFIDENTIAL',
+  }
 ]
 
 function formatDateUTC(date: Date): string {
@@ -32,6 +51,9 @@ function generateICS(): string {
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'X-WR-CALNAME:ogadra 登壇予定',
+    'X-WR-TIMEZONE:Asia/Tokyo',
+    'REFRESH-INTERVAL;VALUE=DURATION:PT1H',
+    'X-PUBLISHED-TTL:PT1H',
   ]
 
   for (const event of events) {
@@ -42,9 +64,17 @@ function generateICS(): string {
       `DTSTART:${formatDateUTC(event.start)}`,
       `DTEND:${formatDateUTC(event.end)}`,
       `SUMMARY:${event.summary}`,
-      `DESCRIPTION:${event.description}`,
-      `LOCATION:${event.location}`,
-      'END:VEVENT'
+      `PRIORITY:5`,
+      `CATEGORIES:PRESENTATION,TECHNICAL,YOKOHAMA`,
+      `CLASS:${event.class}`,
+      `COMMENT:サンプルの登壇予定です${event.uid}`,
+      // `DESCRIPTION:${event.description}`,
+      // `LOCATION:${event.location}`,
+      `URL:https://yokohama-north.connpass.com/event/377972/`,
+      `GEO:35.5246519;139.6253365`,
+      `DESCRIPTION:イベント詳細ページはこちら: https://yokohama-north.connpass.com/event/377972/`,
+      `TRANSP:TRANSPARENT`,
+      `END:VEVENT`
     )
   }
 
