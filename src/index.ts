@@ -1,9 +1,12 @@
 import { Hono } from "hono";
-import type { Env } from "./types/env";
+import type { AppEnv } from "./types/env";
+import { connectDb } from "./middleware/connectDb";
 import { eventRoutes } from "./routes/event";
 import { icsRoutes } from "./routes/ics";
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<AppEnv>();
+
+app.use("*", connectDb);
 
 app.get("/", (c) => {
   return c.text("Hello Mokuroku!");

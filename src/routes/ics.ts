@@ -1,14 +1,12 @@
 import { Hono } from "hono";
-import { drizzle } from "drizzle-orm/d1";
-import { events } from "../repository/schema";
+import { findAllEvents } from "../repository/eventRepository";
 import { generateICS } from "../utils/ics";
-import type { Env } from "../types/env";
+import type { AppEnv } from "../types/env";
 
-const icsRoutes = new Hono<{ Bindings: Env }>();
+const icsRoutes = new Hono<AppEnv>();
 
 icsRoutes.get("/", async (c) => {
-  const db = drizzle(c.env.DB);
-  const eventData = await db.select().from(events);
+  const eventData = await findAllEvents(c.var.db);
   const ics = generateICS(eventData);
   return new Response(ics, {
     status: 200,

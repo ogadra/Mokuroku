@@ -1,0 +1,32 @@
+import { eq } from "drizzle-orm";
+import type { DrizzleD1Database } from "drizzle-orm/d1";
+import { events } from "./schema";
+import type { Event, NewEvent } from "./types/events";
+
+export const findAllEvents = async (db: DrizzleD1Database): Promise<Event[]> => {
+  return db.select().from(events);
+};
+
+export const findEventByUid = async (db: DrizzleD1Database, uid: string): Promise<Event | null> => {
+  const result = await db.select().from(events).where(eq(events.uid, uid));
+  return result[0] ?? null;
+};
+
+export const createEvent = async (db: DrizzleD1Database, data: NewEvent): Promise<Event> => {
+  const result = await db.insert(events).values(data).returning();
+  return result[0];
+};
+
+export const updateEvent = async (
+  db: DrizzleD1Database,
+  uid: string,
+  data: Partial<NewEvent>,
+): Promise<Event | null> => {
+  const result = await db.update(events).set(data).where(eq(events.uid, uid)).returning();
+  return result[0] ?? null;
+};
+
+export const deleteEvent = async (db: DrizzleD1Database, uid: string): Promise<boolean> => {
+  const result = await db.delete(events).where(eq(events.uid, uid)).returning();
+  return result.length > 0;
+};
