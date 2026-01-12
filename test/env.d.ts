@@ -1,4 +1,4 @@
-import type { Env } from "../src/index";
+import type { Env } from "../src/types/env";
 
 interface D1Migration {
   name: string;
