@@ -12,6 +12,7 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "typecheck": "tsgo --noEmit",
+    "typecheck:test": "tsgo -p test/tsconfig.json --noEmit",
     "typegen": "wrangler types",
     "generate": "drizzle-kit generate",
     "migrate": "wrangler d1 migrations apply mokuroku --local",

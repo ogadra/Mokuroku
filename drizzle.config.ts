@@ -1,4 +1,4 @@
-import { defineConfig } from "drizzle-kit";
+import { defineConfig, type Config } from "drizzle-kit";
 
 const cfConfig = process.env.LOCAL_DB_PATH
   ? defineConfig({
