@@ -10,7 +10,7 @@
     "deploy": "wrangler deploy",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "typegen": "wrangler types",
     "generate": "drizzle-kit generate",
     "migrate": "wrangler d1 migrations apply mokuroku --local",
@@ -24,9 +24,9 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260103.0",
     "@libsql/client": "^0.17.0",
+    "@typescript/native-preview": "7.0.0-dev.20260112.1",
     "drizzle-kit": "^0.31.8",
     "oxfmt": "^0.24.0",
-    "typescript": "^5.9.3",
     "wrangler": "^4.54.0"
   },
   "packageManager": "pnpm@10.26.1"
