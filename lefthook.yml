@@ -10,5 +10,9 @@ pre-commit:
       glob: "*.{ts,tsx,js,json,jsonc}"
       run: pnpm format:check {staged_files}
     03_typecheck:
-      glob: "*.{ts,tsx}"
+      glob: "{src/**/*.ts,*.config.ts}"
+      exclude: "src/**/*.test.ts"
       run: pnpm typecheck
+    03_typecheck_test:
+      glob: "{test/**/*.ts,src/**/*.test.ts}"
+      run: pnpm typecheck:test
