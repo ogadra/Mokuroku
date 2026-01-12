@@ -1,5 +1,12 @@
 {
-  "name": "mokuroku",
-  "main": "src/index.ts",
-  "compatibility_date": "2025-01-04"
+	"name": "mokuroku",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-01-04",
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "mokuroku",
+			"database_id": "9eac47b4-811a-40ba-80f9-a34a76fd26d5"
+		}
+	],
 }
