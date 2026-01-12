@@ -2,3 +2,4 @@
 
 init:
 	direnv allow
+	lefthook install

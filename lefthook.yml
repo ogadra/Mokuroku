@@ -1,0 +1,14 @@
+pre-commit:
+  parallel: false
+  piped: true
+  commands:
+    01_format:
+      glob: "*.{ts,tsx,js,json,jsonc}"
+      run: pnpm format {staged_files}
+      stage_fixed: true
+    02_check:
+      glob: "*.{ts,tsx,js,json,jsonc}"
+      run: pnpm format:check {staged_files}
+    03_typecheck:
+      glob: "*.{ts,tsx}"
+      run: pnpm typecheck
