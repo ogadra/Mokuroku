@@ -2,6 +2,17 @@
 
 おがどらの登壇予定を確認できるサイトのソースコードです。
 
+## Tech Stack
+
+- Runtime: Cloudflare Workers
+- Framework: Hono
+- Database: Cloudflare D1 (SQLite)
+- ORM: Drizzle ORM
+
+## Development
+
+Nix flakes + direnv
+
 ## API
 
 ### GET /schedule.ics
@@ -32,6 +43,27 @@ GET /schedule.ics?role=speaker&status=confirmed
 
 イベント一覧をJSON形式で取得します。
 
+#### Response
+
+```json
+[
+  {
+    "uid": "string",
+    "dtstart": "ISO8601",
+    "dtend": "ISO8601",
+    "summary": "string",
+    "description": "string",
+    "location": "string",
+    "status": "CONFIRMED | TENTATIVE | CANCELLED",
+    "class": "PUBLIC | PRIVATE | CONFIDENTIAL",
+    "attendeeType": "SPEAKER | ATTENDEE",
+    "created": "ISO8601",
+    "lastModified": "ISO8601",
+    "sequence": "number"
+  }
+]
+```
+
 ### GET /event/:uid
 
 指定したUIDのイベントを取得します。
@@ -40,6 +72,19 @@ GET /schedule.ics?role=speaker&status=confirmed
 
 イベントを作成します。
 
+#### Request Body
+
+| フィールド | 型 | 必須 | 説明 |
+|-----------|-----|------|------|
+| `dtstart` | ISO8601 | Yes | 開始日時 |
+| `dtend` | ISO8601 | Yes | 終了日時 |
+| `summary` | string | Yes | タイトル |
+| `description` | string | Yes | 説明 |
+| `location` | string | Yes | 場所 |
+| `status` | string | Yes | `CONFIRMED`, `TENTATIVE`, `CANCELLED` |
+| `attendeeType` | string | Yes | `SPEAKER`, `ATTENDEE` |
+| `class` | string | No | `PUBLIC`, `PRIVATE`, `CONFIDENTIAL` (default: `PUBLIC`) |
+
 ### PUT /event/:uid
 
 指定したUIDのイベントを更新します。
@@ -47,3 +92,7 @@ GET /schedule.ics?role=speaker&status=confirmed
 ### DELETE /event/:uid
 
 指定したUIDのイベントを削除します。
+
+## License
+
+ISC
