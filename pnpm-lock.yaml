@@ -27,6 +27,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20260103.0
         version: 4.20260103.0
+      '@hono/cli':
+        specifier: ^0.1.8
+        version: 0.1.8
       '@libsql/client':
         specifier: ^0.17.0
         version: 0.17.0
@@ -602,6 +605,16 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@hono/cli@0.1.8':
+    resolution: {integrity: sha512-9/Tapz6KyP0sHEKXjnutcttWWvTTlgyPXGSKb1tst+bw8CVDATx75T76zAX39udK+n2fwYzZk+YFPeWNVYN8BQ==}
+    hasBin: true
+
+  '@hono/node-server@1.19.9':
+    resolution: {integrity: sha512-vHL6w3ecZsky+8P5MD+eFfaGTyCeOHUIFYMGpQGbrBTSmNNoxv0if69rEZ5giu36weC5saFuznL411gRX7bJDw==}
+    engines: {node: '>=18.14.1'}
+    peerDependencies:
+      hono: ^4
+
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
@@ -1112,6 +1125,10 @@ packages:
   color@4.2.3:
     resolution: {integrity: sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==}
     engines: {node: '>=12.5.0'}
+
+  commander@14.0.2:
+    resolution: {integrity: sha512-TywoWNNRbhoD0BXs1P3ZEScW8W5iKrnbithIl0YH+uCmBd0QpPOA8yc82DS3BIE5Ma6FnBVUsJ7wVUDz4dvOWQ==}
+    engines: {node: '>=20'}
 
   cookie@1.1.1:
     resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
@@ -1970,6 +1987,17 @@ snapshots:
   '@esbuild/win32-x64@0.27.0':
     optional: true
 
+  '@hono/cli@0.1.8':
+    dependencies:
+      '@hono/node-server': 1.19.9(hono@4.11.3)
+      commander: 14.0.2
+      esbuild: 0.25.12
+      hono: 4.11.3
+
+  '@hono/node-server@1.19.9(hono@4.11.3)':
+    dependencies:
+      hono: 4.11.3
+
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
       '@img/sharp-libvips-darwin-arm64': 1.0.4
@@ -2393,6 +2421,8 @@ snapshots:
     dependencies:
       color-convert: 2.0.1
       color-string: 1.9.1
+
+  commander@14.0.2: {}
 
   cookie@1.1.1: {}
 
