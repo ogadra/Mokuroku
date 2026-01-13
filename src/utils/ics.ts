@@ -35,6 +35,7 @@ export function generateICS(eventList: Event[]): string {
       `CLASS:${event.class}`,
       `DESCRIPTION:${event.description}`,
       `LOCATION:${event.location}`,
+      `X-ATTENDEE-TYPE:${event.attendeeType}`,
       `CREATED:${formatDateUTC(event.created)}`,
       `LAST-MODIFIED:${formatDateUTC(event.lastModified)}`,
       `SEQUENCE:${event.sequence}`,

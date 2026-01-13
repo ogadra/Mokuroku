@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/d1";
 import { beforeAll, beforeEach, vi } from "vitest";
 import { events } from "../src/repository/schema";
 import { EVENT_STATUS } from "../src/repository/enums/eventStatus";
+import { ATTENDEE_TYPE } from "../src/repository/enums/attendeeType";
 
 // テスト用に時刻を固定 (2026-01-01 00:00:00 UTC)
 vi.useFakeTimers();
@@ -28,6 +29,7 @@ const seedDatabase = async () => {
     description: "Test Description",
     location: "Test Location",
     status: EVENT_STATUS.CONFIRMED,
+    attendeeType: ATTENDEE_TYPE.SPEAKER,
     created: new Date("2026-01-01T00:00:00.000Z"),
     lastModified: new Date("2026-01-15T09:30:00.000Z"),
   });

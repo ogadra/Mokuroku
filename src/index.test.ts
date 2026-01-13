@@ -2,6 +2,7 @@ import { SELF } from "cloudflare:test";
 import { describe, it, expect } from "vitest";
 import { EVENT_STATUS } from "./repository/enums/eventStatus";
 import { EVENT_CLASS } from "./repository/enums/eventClass";
+import { ATTENDEE_TYPE } from "./repository/enums/attendeeType";
 
 const HOST = "http://localhost";
 
@@ -50,6 +51,7 @@ describe("Mokuroku API", () => {
         "CLASS:PUBLIC",
         "DESCRIPTION:Test Description",
         "LOCATION:Test Location",
+        "X-ATTENDEE-TYPE:SPEAKER",
         "CREATED:20260101T000000Z",
         "LAST-MODIFIED:20260115T093000Z",
         "SEQUENCE:0",
@@ -83,6 +85,7 @@ describe("Mokuroku API", () => {
           location: "Test Location",
           status: EVENT_STATUS.CONFIRMED,
           class: EVENT_CLASS.PUBLIC,
+          attendeeType: ATTENDEE_TYPE.SPEAKER,
           created: "2026-01-01T00:00:00.000Z",
           lastModified: "2026-01-15T09:30:00.000Z",
           sequence: 0,
@@ -109,6 +112,7 @@ describe("Mokuroku API", () => {
         location: "Test Location",
         status: EVENT_STATUS.CONFIRMED,
         class: EVENT_CLASS.PUBLIC,
+        attendeeType: ATTENDEE_TYPE.SPEAKER,
         created: "2026-01-01T00:00:00.000Z",
         lastModified: "2026-01-15T09:30:00.000Z",
         sequence: 0,
