@@ -5,7 +5,7 @@ import {
   createEvent,
   updateEvent,
   deleteEvent,
-} from "../repository/eventRepository";
+} from "../queries/event";
 import type { AppEnv } from "../types/env";
 
 const eventRoutes = new Hono<AppEnv>();

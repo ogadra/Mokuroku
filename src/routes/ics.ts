@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { findAllEvents } from "../repository/eventRepository";
+import { findAllEvents } from "../queries/event";
 import { generateICS } from "../utils/ics";
 import type { AppEnv } from "../types/env";
 

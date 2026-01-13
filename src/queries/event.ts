@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
-import { events } from "./schema";
-import type { Event, NewEvent } from "./types/events";
+import { events } from "../repository/schema";
+import type { Event, NewEvent } from "../repository/types/events";
 
 export const findAllEvents = async (db: DrizzleD1Database): Promise<Event[]> => {
   return db.select().from(events);
