@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
+import { timingSafeEqual } from "hono/utils/buffer";
 import {
   findAllEvents,
   findEventByUid,
@@ -8,6 +9,7 @@ import {
   deleteEvent,
 } from "../queries/event";
 import type { AppEnv } from "../types/env";
+import { hashToken } from "../utils/hash";
 
 const eventRoutes = new Hono<AppEnv>();
 
@@ -16,7 +18,12 @@ eventRoutes.use("*", async (c, next) => {
   if (c.req.method === "GET") {
     return next();
   }
-  const auth = bearerAuth({ token: c.env.API_TOKEN });
+  const auth = bearerAuth({
+    verifyToken: async (token) => {
+      const hashedInput = await hashToken(token);
+      return timingSafeEqual(hashedInput, c.env.API_TOKEN_HASH);
+    },
+  });
   return auth(c, next);
 });
 

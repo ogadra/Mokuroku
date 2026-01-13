@@ -13,7 +13,7 @@ export default defineWorkersConfig(async () => {
           miniflare: {
             bindings: {
               TEST_MIGRATIONS: migrations,
-              API_TOKEN: "test-api-token",
+              API_TOKEN_HASH: "3f98e3ad578064e710ba3876cb369f9c9c29331875673bebb80efe369c17adbd",
             },
           },
         },
