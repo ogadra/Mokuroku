@@ -3,6 +3,7 @@ import { sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { EVENT_STATUS, type EventStatusType } from "./enums/eventStatus";
 import { EVENT_CLASS, type EventClassType } from "./enums/eventClass";
+import { ATTENDEE_TYPE, type AttendeeTypeType } from "./enums/attendeeType";
 
 /**
  * Events table for iCalendar VEVENT components
@@ -42,6 +43,13 @@ export const events = sqliteTable("events", {
   })
     .$type<EventClassType>()
     .default(EVENT_CLASS.PUBLIC)
+    .notNull(),
+
+  /** @description Participation type: SPEAKER or ATTENDEE (non-RFC5545 extension) */
+  attendeeType: text("attendee_type", {
+    enum: Object.values(ATTENDEE_TYPE) as [string, ...string[]],
+  })
+    .$type<AttendeeTypeType>()
     .notNull(),
 
   /** @description Timestamp when the event was created (RFC5545 CREATED) */
