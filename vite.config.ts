@@ -12,7 +12,7 @@ export default defineConfig(({ mode, command }) => {
             input: { "url-builder": "./src/client/UrlBuilder.client.tsx" },
             output: { entryFileNames: "[name].js" },
           },
-          outDir: "dist/client",
+          outDir: "src/dist/client",
         },
       };
     }

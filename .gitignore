@@ -4,3 +4,4 @@ node_modules/
 .direnv/
 .dev.vars
 dist/
+src/dist/
