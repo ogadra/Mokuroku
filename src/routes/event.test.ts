@@ -144,3 +144,65 @@ describe("POST /event", () => {
     expect(response.status, "ステータスコードが201であること").toBe(201);
   });
 });
+
+describe("PUT /event/:uid", () => {
+  it("returns 200 and updated event with valid token", async () => {
+    const updateBody = {
+      summary: "Updated Event Title",
+    };
+    const response = await SELF.fetch(`${HOST}/event/test-event-1`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-api-token",
+      },
+      body: JSON.stringify(updateBody),
+    });
+    expect(response.status, "ステータスコードが200であること").toBe(200);
+    const json = await response.json();
+    expect(json.summary, "サマリーが更新されていること").toBe("Updated Event Title");
+    expect(json.uid, "UIDが変更されていないこと").toBe("test-event-1");
+  });
+
+  it("returns 404 for non-existent event", async () => {
+    const response = await SELF.fetch(`${HOST}/event/non-existent-uid`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-api-token",
+      },
+      body: JSON.stringify({ summary: "Test" }),
+    });
+    expect(response.status, "ステータスコードが404であること").toBe(404);
+    expect(await response.text(), "エラーメッセージが返されること").toBe("Event not found");
+  });
+});
+
+describe("DELETE /event/:uid", () => {
+  it("returns 200 and deletes event with valid token", async () => {
+    const response = await SELF.fetch(`${HOST}/event/test-event-2`, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer test-api-token",
+      },
+    });
+    expect(response.status, "ステータスコードが200であること").toBe(200);
+    expect(await response.json(), "削除成功メッセージが返されること").toStrictEqual({
+      message: "Event deleted",
+    });
+
+    const getResponse = await SELF.fetch(`${HOST}/event/test-event-2`);
+    expect(getResponse.status, "削除後のGETで404が返ること").toBe(404);
+  });
+
+  it("returns 404 for non-existent event", async () => {
+    const response = await SELF.fetch(`${HOST}/event/non-existent-uid`, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer test-api-token",
+      },
+    });
+    expect(response.status, "ステータスコードが404であること").toBe(404);
+    expect(await response.text(), "エラーメッセージが返されること").toBe("Event not found");
+  });
+});
