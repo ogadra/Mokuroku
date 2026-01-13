@@ -37,6 +37,7 @@ pnpm deploy
 ## Coding Guidelines
 
 - Prefer constants over string literals (e.g., use `ATTENDEE_TYPE.SPEAKER` instead of `"SPEAKER"`)
+- Keep comments consistent throughout the codebase. Do not add parenthetical notes as afterthoughts.
 
 ## Testing Guidelines
 

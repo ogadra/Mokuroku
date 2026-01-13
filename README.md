@@ -69,6 +69,25 @@ GET /schedule.ics?role=speaker&status=confirmed
 
 指定したUIDのイベントを取得します。
 
+### 認証
+
+POST/PUT/DELETEはBearer Token認証が必要です。
+
+```bash
+# トークンのハッシュを生成
+echo -n "your-secret-token" | sha256sum | cut -d' ' -f1
+
+# Cloudflare Workersにハッシュを設定
+wrangler secret put API_TOKEN_HASH
+# 上で生成したハッシュ値を入力
+
+# リクエスト時は生トークンを使用
+curl -X POST https://your-worker.dev/event \
+  -H "Authorization: Bearer your-secret-token" \
+  -H "Content-Type: application/json" \
+  -d '{"summary": "Event"}'
+```
+
 ### POST /event
 
 イベントを作成します。
