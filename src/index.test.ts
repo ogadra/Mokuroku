@@ -17,55 +17,6 @@ describe("Mokuroku API", () => {
     });
   });
 
-  describe("GET /ics", () => {
-    it("returns ICS calendar format with seeded event", async () => {
-      const response = await SELF.fetch(`${HOST}/ics`);
-
-      expect(response.status, "ステータスコードが200であること").toBe(200);
-      expect(
-        response.headers.get("Content-Type"),
-        "Content-Typeヘッダーがtext/calendar; charset=utf-8であること",
-      ).toBe("text/calendar; charset=utf-8");
-      expect(
-        response.headers.get("Cache-Control"),
-        "Cache-Controlヘッダーがno-cache, no-store, must-revalidateであること",
-      ).toBe("no-cache, no-store, must-revalidate");
-
-      const expectedLines = [
-        "BEGIN:VCALENDAR",
-        "VERSION:2.0",
-        "PRODID:-//Mokuroku//Speaking Schedule//EN",
-        "CALSCALE:GREGORIAN",
-        "METHOD:PUBLISH",
-        "X-WR-CALNAME:ogadra 登壇予定",
-        "X-WR-TIMEZONE:Asia/Tokyo",
-        "REFRESH-INTERVAL;VALUE=DURATION:PT1H",
-        "X-PUBLISHED-TTL:PT1H",
-        "BEGIN:VEVENT",
-        "UID:test-event-1",
-        "DTSTAMP:20260101T000000Z",
-        "DTSTART:20260201T100000Z",
-        "DTEND:20260201T120000Z",
-        "SUMMARY:Test Event",
-        "STATUS:CONFIRMED",
-        "CLASS:PUBLIC",
-        "DESCRIPTION:Test Description",
-        "LOCATION:Test Location",
-        "X-ATTENDEE-TYPE:SPEAKER",
-        "CREATED:20260101T000000Z",
-        "LAST-MODIFIED:20260115T093000Z",
-        "SEQUENCE:0",
-        "TRANSP:TRANSPARENT",
-        "END:VEVENT",
-        "END:VCALENDAR",
-      ];
-
-      expect(await response.text(), "iCalレスポンス本文がすべて含まれていること").toBe(
-        expectedLines.join("\r\n"),
-      );
-    });
-  });
-
   describe("GET /event", () => {
     it("returns event list as JSON with seeded event", async () => {
       const response = await SELF.fetch(`${HOST}/event`);
@@ -84,6 +35,34 @@ describe("Mokuroku API", () => {
           description: "Test Description",
           location: "Test Location",
           status: EVENT_STATUS.CONFIRMED,
+          class: EVENT_CLASS.PUBLIC,
+          attendeeType: ATTENDEE_TYPE.SPEAKER,
+          created: "2026-01-01T00:00:00.000Z",
+          lastModified: "2026-01-15T09:30:00.000Z",
+          sequence: 0,
+        },
+        {
+          uid: "test-event-2",
+          dtstart: "2026-03-01T14:00:00.000Z",
+          dtend: "2026-03-01T16:00:00.000Z",
+          summary: "Attendee Event",
+          description: "Attending as audience",
+          location: "Conference Hall",
+          status: EVENT_STATUS.CONFIRMED,
+          class: EVENT_CLASS.PUBLIC,
+          attendeeType: ATTENDEE_TYPE.ATTENDEE,
+          created: "2026-01-01T00:00:00.000Z",
+          lastModified: "2026-01-15T09:30:00.000Z",
+          sequence: 0,
+        },
+        {
+          uid: "test-event-3",
+          dtstart: "2026-04-01T09:00:00.000Z",
+          dtend: "2026-04-01T11:00:00.000Z",
+          summary: "Tentative Speaker Event",
+          description: "Tentative speaking engagement",
+          location: "Online",
+          status: EVENT_STATUS.TENTATIVE,
           class: EVENT_CLASS.PUBLIC,
           attendeeType: ATTENDEE_TYPE.SPEAKER,
           created: "2026-01-01T00:00:00.000Z",

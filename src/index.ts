@@ -12,7 +12,7 @@ app.get("/", (c) => {
   return c.text("Hello Mokuroku!");
 });
 
-app.route("/ics", icsRoutes);
+app.route("/schedule.ics", icsRoutes);
 app.route("/event", eventRoutes);
 
 export default app;
