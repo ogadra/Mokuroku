@@ -98,10 +98,9 @@ describe("GET /event/:uid", () => {
 
 describe("POST /event", () => {
   const eventBody = {
-    uid: "auth-test-event",
     summary: "Auth Test Event",
-    dtstart: "2026-05-01T10:00:00.000Z",
-    dtend: "2026-05-01T12:00:00.000Z",
+    dtstart: "2026-05-01T10:00:00Z",
+    dtend: "2026-05-01T12:00:00Z",
     description: "Test",
     location: "Test",
     status: EVENT_STATUS.CONFIRMED,
@@ -142,6 +141,47 @@ describe("POST /event", () => {
       body: JSON.stringify(eventBody),
     });
     expect(response.status, "ステータスコードが201であること").toBe(201);
+  });
+
+  it("JSTタイムゾーン付き日時でイベントを作成できること", async () => {
+    const jstEventBody = {
+      summary: "JST Event",
+      dtstart: "2026-06-01T19:00:00+09:00",
+      dtend: "2026-06-01T21:00:00+09:00",
+      description: "JST timezone test",
+      location: "Tokyo",
+      status: EVENT_STATUS.CONFIRMED,
+      class: EVENT_CLASS.PUBLIC,
+      attendeeType: ATTENDEE_TYPE.SPEAKER,
+    };
+    const response = await SELF.fetch(`${HOST}/event`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-api-token",
+      },
+      body: JSON.stringify(jstEventBody),
+    });
+    expect(response.status, "ステータスコードが201であること").toBe(201);
+    const json = (await response.json()) as { dtstart: string; dtend: string };
+    expect(json.dtstart, "dtstartがUTCに変換されていること").toBe("2026-06-01T10:00:00.000Z");
+    expect(json.dtend, "dtendがUTCに変換されていること").toBe("2026-06-01T12:00:00.000Z");
+  });
+
+  it("タイムゾーンなしの日時で400エラーを返すこと", async () => {
+    const invalidBody = {
+      ...eventBody,
+      dtstart: "2026-05-01T10:00:00",
+    };
+    const response = await SELF.fetch(`${HOST}/event`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-api-token",
+      },
+      body: JSON.stringify(invalidBody),
+    });
+    expect(response.status, "ステータスコードが400であること").toBe(400);
   });
 });
 
