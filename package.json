@@ -7,8 +7,11 @@
   "author": "",
   "scripts": {
     "test": "vitest",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "dev": "vite",
+    "build": "vite build --mode client && vite build --mode server",
+    "build:client": "vite build --mode client",
+    "build:server": "vite build --mode server",
+    "deploy": "pnpm build && wrangler deploy",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "typecheck": "tsgo --noEmit",
