@@ -1,0 +1,4 @@
+# SHA256 hash of your API token
+# Generate with: echo -n "your-token" | sha256sum | cut -d' ' -f1
+# Sample value is hash of "sample-token"
+API_TOKEN_HASH=0f35d0ae14518b96bd6d3fec3ca15801fd58c9e048b1ccdea11a71378f2acdc9
