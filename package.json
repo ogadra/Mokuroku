@@ -16,6 +16,7 @@
     "typegen": "wrangler types",
     "generate": "drizzle-kit generate",
     "migrate": "wrangler d1 migrations apply mokuroku --local",
+    "migrate:prd": "wrangler d1 migrations apply mokuroku --remote",
     "db:studio": "npx cross-env LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio"
   },
   "dependencies": {
