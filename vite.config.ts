@@ -5,27 +5,33 @@ export default defineConfig(({ mode, command }) => {
   if (command === "build") {
     if (mode === "client") {
       return {
-        plugins: [cloudflare()],
         esbuild: { jsxImportSource: "hono/jsx/dom" },
         build: {
+          copyPublicDir: false,
           rollupOptions: {
-            input: ["./src/client/UrlBuilder.client.tsx"],
-            output: { entryFileNames: "client/url-builder.js" },
+            input: { "url-builder": "./src/client/UrlBuilder.client.tsx" },
+            output: { entryFileNames: "[name].js" },
           },
-          outDir: "dist",
+          outDir: "dist/client",
         },
       };
     }
     if (mode === "server") {
       return {
         plugins: [cloudflare()],
-        build: { ssr: "src/index.ts", outDir: ".cloudflare/worker" },
+        build: {
+          ssr: "src/index.ts",
+          outDir: ".cloudflare/worker",
+        },
         ssr: { target: "webworker" },
       };
     }
+    return {};
   }
   return {
     plugins: [cloudflare()],
-    server: { host: "0.0.0.0" },
+    server: {
+      host: "0.0.0.0",
+    },
   };
 });

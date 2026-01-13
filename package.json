@@ -5,6 +5,7 @@
   "keywords": [],
   "license": "ISC",
   "author": "",
+  "type": "module",
   "scripts": {
     "test": "vitest",
     "dev": "vite",
@@ -40,7 +41,7 @@
     "oxfmt": "^0.24.0",
     "vite": "^7.3.1",
     "vitest": "3.2.4",
-    "wrangler": "^4.54.0"
+    "wrangler": "^4.59.1"
   },
   "packageManager": "pnpm@10.26.1"
 }
