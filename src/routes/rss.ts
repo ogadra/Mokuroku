@@ -1,0 +1,51 @@
+import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
+import * as v from "valibot";
+import { findEventsByFilter } from "../queries/event";
+import { generateRSS } from "../utils/rss";
+import type { AppEnv } from "../types/env";
+import { ATTENDEE_TYPE, type AttendeeType } from "../repository/enums/attendeeType";
+import { EVENT_STATUS, type EventStatusType } from "../repository/enums/eventStatus";
+
+const validRoles = Object.values(ATTENDEE_TYPE).map((v) => v.toLowerCase()) as [
+  string,
+  ...string[],
+];
+const validStatuses = Object.values(EVENT_STATUS).map((v) => v.toLowerCase()) as [
+  string,
+  ...string[],
+];
+
+const querySchema = v.object({
+  role: v.optional(v.picklist(validRoles)),
+  status: v.optional(v.picklist(validStatuses)),
+});
+
+const rssRoutes = new Hono<AppEnv>();
+
+rssRoutes.get("/", async (c) => {
+  const result = v.safeParse(querySchema, {
+    role: c.req.query("role"),
+    status: c.req.query("status"),
+  });
+
+  if (!result.success) {
+    throw new HTTPException(400, { message: "Invalid query parameters" });
+  }
+
+  const { role, status } = result.output;
+  const attendeeType = role?.toUpperCase() as AttendeeType | undefined;
+  const eventStatus = status?.toUpperCase() as EventStatusType | undefined;
+
+  const eventData = await findEventsByFilter(c.var.db, attendeeType, eventStatus);
+  const rss = generateRSS(eventData, role === undefined);
+  return new Response(rss, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/rss+xml; charset=utf-8",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+    },
+  });
+});
+
+export { rssRoutes };
