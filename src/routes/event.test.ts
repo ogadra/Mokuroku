@@ -90,13 +90,9 @@ describe("GET /event/:uid", () => {
   it("returns 404 for non-existent event", async () => {
     const response = await SELF.fetch(`${HOST}/event/non-existent-uid`);
     expect(response.status, "ステータスコードが404であること").toBe(404);
-    expect(
-      response.headers.get("Content-Type"),
-      "Content-Typeヘッダーがapplication/jsonであること",
-    ).toBe("application/json");
-    expect(await response.json(), "レスポンス本文がエラーメッセージであること").toStrictEqual({
-      error: "Event not found",
-    });
+    expect(await response.text(), "レスポンス本文がエラーメッセージであること").toBe(
+      "Event not found",
+    );
   });
 });
 

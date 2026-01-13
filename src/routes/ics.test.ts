@@ -172,26 +172,18 @@ describe("GET /schedule.ics", () => {
     const response = await SELF.fetch(`${HOST}/schedule.ics?role=invalid`);
 
     expect(response.status, "ステータスコードが400であること").toBe(400);
-    expect(
-      response.headers.get("Content-Type"),
-      "Content-Typeヘッダーがapplication/jsonであること",
-    ).toBe("application/json");
-    expect(await response.json(), "エラーメッセージが返されること").toStrictEqual({
-      error: "Invalid query parameters",
-    });
+    expect(await response.text(), "エラーメッセージが返されること").toBe(
+      "Invalid query parameters",
+    );
   });
 
   it("無効なstatusパラメータに対して400エラーを返す", async () => {
     const response = await SELF.fetch(`${HOST}/schedule.ics?status=invalid`);
 
     expect(response.status, "ステータスコードが400であること").toBe(400);
-    expect(
-      response.headers.get("Content-Type"),
-      "Content-Typeヘッダーがapplication/jsonであること",
-    ).toBe("application/json");
-    expect(await response.json(), "エラーメッセージが返されること").toStrictEqual({
-      error: "Invalid query parameters",
-    });
+    expect(await response.text(), "エラーメッセージが返されること").toBe(
+      "Invalid query parameters",
+    );
   });
 
   it("条件に合致するイベントがない場合は空のカレンダーを返す", async () => {

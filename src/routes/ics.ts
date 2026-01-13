@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import * as v from "valibot";
 import { findEventsByFilter } from "../queries/event";
 import { generateICS } from "../utils/ics";
@@ -29,7 +30,7 @@ icsRoutes.get("/", async (c) => {
   });
 
   if (!result.success) {
-    return c.json({ error: "Invalid query parameters" }, 400);
+    throw new HTTPException(400, { message: "Invalid query parameters" });
   }
 
   const { role, status } = result.output;

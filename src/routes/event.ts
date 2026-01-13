@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
 import { bearerAuth } from "hono/bearer-auth";
 import { timingSafeEqual } from "hono/utils/buffer";
 import {
@@ -38,7 +39,7 @@ eventRoutes.get("/:uid", async (c) => {
   const uid = c.req.param("uid");
   const event = await findEventByUid(c.var.db, uid);
   if (!event) {
-    return c.json({ error: "Event not found" }, 404);
+    throw new HTTPException(404, { message: "Event not found" });
   }
   return c.json(event);
 });
@@ -66,7 +67,7 @@ eventRoutes.put("/:uid", async (c) => {
   });
 
   if (!result) {
-    return c.json({ error: "Event not found" }, 404);
+    throw new HTTPException(404, { message: "Event not found" });
   }
   return c.json(result);
 });
@@ -77,7 +78,7 @@ eventRoutes.delete("/:uid", async (c) => {
   const deleted = await deleteEvent(c.var.db, uid);
 
   if (!deleted) {
-    return c.json({ error: "Event not found" }, 404);
+    throw new HTTPException(404, { message: "Event not found" });
   }
   return c.json({ message: "Event deleted" });
 });
