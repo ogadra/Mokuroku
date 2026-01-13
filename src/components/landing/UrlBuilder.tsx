@@ -5,9 +5,8 @@ type Props = {
   environment: string;
 };
 
-export const UrlBuilder: FC<Props> = ({ environment }) => {
-  const scriptSrc =
-    environment !== "dev" ? "/client/url-builder.js" : "/src/client/UrlBuilder.client.tsx";
+export const UrlBuilder: FC<Props> = ({ environment: _environment }) => {
+  const scriptSrc = "/client/url-builder.js";
 
   return (
     <section id="builder" class={containerClass}>
