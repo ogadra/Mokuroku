@@ -3,7 +3,7 @@ import * as v from "valibot";
 import { findEventsByFilter } from "../queries/event";
 import { generateICS } from "../utils/ics";
 import type { AppEnv } from "../types/env";
-import { ATTENDEE_TYPE, type AttendeeTypeType } from "../repository/enums/attendeeType";
+import { ATTENDEE_TYPE, type AttendeeType } from "../repository/enums/attendeeType";
 import { EVENT_STATUS, type EventStatusType } from "../repository/enums/eventStatus";
 
 const validRoles = Object.values(ATTENDEE_TYPE).map((v) => v.toLowerCase()) as [
@@ -33,7 +33,7 @@ icsRoutes.get("/", async (c) => {
   }
 
   const { role, status } = result.output;
-  const attendeeType = role?.toUpperCase() as AttendeeTypeType | undefined;
+  const attendeeType = role?.toUpperCase() as AttendeeType | undefined;
   const eventStatus = status?.toUpperCase() as EventStatusType | undefined;
 
   const eventData = await findEventsByFilter(c.var.db, attendeeType, eventStatus);

@@ -3,4 +3,4 @@ export const ATTENDEE_TYPE = {
   ATTENDEE: "ATTENDEE",
 } as const;
 
-export type AttendeeTypeType = (typeof ATTENDEE_TYPE)[keyof typeof ATTENDEE_TYPE];
+export type AttendeeType = (typeof ATTENDEE_TYPE)[keyof typeof ATTENDEE_TYPE];

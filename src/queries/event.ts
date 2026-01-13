@@ -2,7 +2,7 @@ import { and, eq, type SQL } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { events } from "../repository/schema";
 import type { Event, NewEvent } from "../repository/types/events";
-import type { AttendeeTypeType } from "../repository/enums/attendeeType";
+import type { AttendeeType } from "../repository/enums/attendeeType";
 import type { EventStatusType } from "../repository/enums/eventStatus";
 
 export const findAllEvents = async (db: DrizzleD1Database): Promise<Event[]> => {
@@ -11,7 +11,7 @@ export const findAllEvents = async (db: DrizzleD1Database): Promise<Event[]> => 
 
 export const findEventsByFilter = async (
   db: DrizzleD1Database,
-  role?: AttendeeTypeType,
+  role?: AttendeeType,
   status?: EventStatusType,
 ): Promise<Event[]> => {
   const conditions: SQL[] = [];
