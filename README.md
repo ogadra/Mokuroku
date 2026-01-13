@@ -13,6 +13,36 @@
 
 Nix flakes + direnv
 
+## Project Structure
+
+```
+src/
+├── index.ts                 # エントリーポイント
+├── middleware/
+│   ├── auth.ts              # Bearer Token認証
+│   └── connectDb.ts         # D1データベース接続
+├── queries/
+│   └── event.ts             # イベントCRUDクエリ
+├── repository/
+│   ├── enums/               # 定数定義（attendeeType, eventClass, eventStatus）
+│   ├── migrations/          # Drizzleマイグレーション
+│   ├── schema.ts            # DBスキーマ定義
+│   └── types/               # DB型定義
+├── routes/
+│   ├── event.ts             # /event エンドポイント
+│   ├── ics.ts               # /schedule.ics エンドポイント
+│   └── rss.ts               # /feed.xml エンドポイント
+├── schemas/
+│   └── event.ts             # リクエストバリデーション（Valibot）
+├── types/
+│   └── env.ts               # 環境変数型定義
+└── utils/
+    ├── eventPrefix.ts       # イベントタイトルのプレフィックス生成
+    ├── hash.ts              # SHA-256ハッシュ
+    ├── ics.ts               # iCalendar生成
+    └── rss.ts               # RSS生成
+```
+
 ## API
 
 ### GET /schedule.ics
@@ -40,9 +70,41 @@ GET /schedule.ics?status=confirmed
 GET /schedule.ics?role=speaker&status=confirmed
 ```
 
+### GET /feed.xml
+
+RSS 2.0形式でイベント一覧を取得します。
+
+#### Query Parameters
+
+| パラメータ | 説明 | 値 |
+|-----------|------|-----|
+| `role` | 参加種別でフィルタ | `speaker`, `attendee` |
+| `status` | ステータスでフィルタ | `confirmed`, `tentative`, `cancelled` |
+
+#### 備考
+
+- タイトルにはステータスのプレフィックス（`[確定]`, `[仮]`, `[中止]`）が常に付与されます
+- `role` を指定しない場合、タイトルに参加種別のプレフィックス（`[登壇]`, `[参加]`）も付与されます
+
+#### 例
+
+```
+GET /feed.xml
+GET /feed.xml?role=speaker
+GET /feed.xml?status=confirmed
+GET /feed.xml?role=speaker&status=confirmed
+```
+
 ### GET /event
 
 イベント一覧をJSON形式で取得します。
+
+#### Query Parameters
+
+| パラメータ | 説明 | 値 |
+|-----------|------|-----|
+| `role` | 参加種別でフィルタ | `speaker`, `attendee` |
+| `status` | ステータスでフィルタ | `confirmed`, `tentative`, `cancelled` |
 
 #### Response
 
@@ -96,8 +158,8 @@ curl -X POST https://your-worker.dev/event \
 
 | フィールド | 型 | 必須 | 説明 |
 |-----------|-----|------|------|
-| `dtstart` | ISO8601 | Yes | 開始日時 |
-| `dtend` | ISO8601 | Yes | 終了日時 |
+| `dtstart` | ISO8601 | Yes | 開始日時（タイムゾーン必須: `2026-01-01T10:00:00+09:00` または `2026-01-01T01:00:00Z`） |
+| `dtend` | ISO8601 | Yes | 終了日時（タイムゾーン必須: `2026-01-01T12:00:00+09:00` または `2026-01-01T03:00:00Z`） |
 | `summary` | string | Yes | タイトル |
 | `description` | string | Yes | 説明 |
 | `location` | string | Yes | 場所 |
