@@ -2,6 +2,7 @@
   "name": "mokuroku",
   "main": "src/index.ts",
   "compatibility_date": "2025-01-04",
+  "routes": [{ "pattern": "mokuroku.ogadra.com", "custom_domain": true }],
   "d1_databases": [
     {
       "binding": "DB",
