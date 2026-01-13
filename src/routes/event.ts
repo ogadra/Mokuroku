@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
+import * as v from "valibot";
 import {
   findAllEvents,
   findEventByUid,
@@ -9,6 +10,7 @@ import {
 } from "../queries/event";
 import type { AppEnv } from "../types/env";
 import { requireAuth } from "../middleware/auth";
+import { createEventSchema, updateEventSchema } from "../schemas/event";
 
 const eventRoutes = new Hono<AppEnv>();
 
@@ -31,10 +33,14 @@ eventRoutes.get("/:uid", async (c) => {
 // POST /event - イベント作成
 eventRoutes.post("/", requireAuth, async (c) => {
   const body = await c.req.json();
+  const parsed = v.safeParse(createEventSchema, body);
+  if (!parsed.success) {
+    throw new HTTPException(400, { message: "Invalid request body" });
+  }
   const result = await createEvent(c.var.db, {
-    ...body,
-    ...(body.dtstart ? { dtstart: new Date(body.dtstart) } : {}),
-    ...(body.dtend ? { dtend: new Date(body.dtend) } : {}),
+    ...parsed.output,
+    dtstart: new Date(parsed.output.dtstart),
+    dtend: new Date(parsed.output.dtend),
   });
   return c.json(result, 201);
 });
@@ -43,11 +49,16 @@ eventRoutes.post("/", requireAuth, async (c) => {
 eventRoutes.put("/:uid", requireAuth, async (c) => {
   const uid = c.req.param("uid");
   const body = await c.req.json();
+  const parsed = v.safeParse(updateEventSchema, body);
+  if (!parsed.success) {
+    throw new HTTPException(400, { message: "Invalid request body" });
+  }
 
+  const { dtstart, dtend, ...rest } = parsed.output;
   const result = await updateEvent(c.var.db, uid, {
-    ...body,
-    ...(body.dtstart ? { dtstart: new Date(body.dtstart) } : {}),
-    ...(body.dtend ? { dtend: new Date(body.dtend) } : {}),
+    ...rest,
+    ...(dtstart ? { dtstart: new Date(dtstart) } : {}),
+    ...(dtend ? { dtend: new Date(dtend) } : {}),
   });
 
   if (!result) {
