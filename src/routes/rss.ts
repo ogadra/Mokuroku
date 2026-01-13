@@ -38,7 +38,8 @@ rssRoutes.get("/", async (c) => {
   const eventStatus = status?.toUpperCase() as EventStatusType | undefined;
 
   const eventData = await findEventsByFilter(c.var.db, attendeeType, eventStatus);
-  const rss = generateRSS(eventData, role === undefined);
+  const baseUrl = new URL(c.req.url).origin;
+  const rss = generateRSS(eventData, role === undefined, baseUrl);
   return new Response(rss, {
     status: 200,
     headers: {

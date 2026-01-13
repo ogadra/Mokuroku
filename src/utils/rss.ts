@@ -14,7 +14,7 @@ const formatRFC822Date = (date: Date): string => {
   return date.toUTCString();
 };
 
-export const generateRSS = (events: Event[], addRolePrefix: boolean): string => {
+export const generateRSS = (events: Event[], addRolePrefix: boolean, baseUrl: string): string => {
   const lastBuildDate =
     events.length > 0
       ? formatRFC822Date(new Date(Math.max(...events.map((e) => e.lastModified.getTime()))))
@@ -37,6 +37,7 @@ export const generateRSS = (events: Event[], addRolePrefix: boolean): string => 
 <rss version="2.0">
   <channel>
     <title>Mokuroku - ogadra's Schedule</title>
+    <link>${baseUrl}</link>
     <description>ogadra's speaking schedule and upcoming events</description>
     <language>ja</language>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>

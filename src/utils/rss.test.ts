@@ -6,6 +6,7 @@ import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
 import type { Event } from "../repository/types/events";
 
 describe("generateRSS", () => {
+  const testBaseUrl = "https://example.com";
   const baseEvent: Event = {
     uid: "test-uid",
     dtstart: new Date("2026-02-01T10:00:00.000Z"),
@@ -22,11 +23,12 @@ describe("generateRSS", () => {
   };
 
   it("空のイベントリストで空のフィードを出力すること", () => {
-    const result = generateRSS([], true);
+    const result = generateRSS([], true, testBaseUrl);
     const expected = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
     <title>Mokuroku - ogadra's Schedule</title>
+    <link>https://example.com</link>
     <description>ogadra's speaking schedule and upcoming events</description>
     <language>ja</language>
     <lastBuildDate>Thu, 01 Jan 1970 00:00:00 GMT</lastBuildDate>
@@ -37,11 +39,12 @@ describe("generateRSS", () => {
   });
 
   it("CONFIRMEDステータスのイベントを正しく出力すること", () => {
-    const result = generateRSS([baseEvent], false);
+    const result = generateRSS([baseEvent], false, testBaseUrl);
     const expected = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
     <title>Mokuroku - ogadra's Schedule</title>
+    <link>https://example.com</link>
     <description>ogadra's speaking schedule and upcoming events</description>
     <language>ja</language>
     <lastBuildDate>Thu, 15 Jan 2026 09:30:00 GMT</lastBuildDate>
@@ -58,7 +61,7 @@ describe("generateRSS", () => {
 
   it("TENTATIVEステータスのイベントに[仮]プレフィックスが付くこと", () => {
     const event: Event = { ...baseEvent, status: EVENT_STATUS.TENTATIVE };
-    const result = generateRSS([event], false);
+    const result = generateRSS([event], false, testBaseUrl);
     expect(result, "タイトルに[仮]プレフィックスが付くこと").toContain(
       "<title>[仮] Test Event</title>",
     );
@@ -66,18 +69,19 @@ describe("generateRSS", () => {
 
   it("CANCELLEDステータスのイベントに[中止]プレフィックスが付くこと", () => {
     const event: Event = { ...baseEvent, status: EVENT_STATUS.CANCELLED };
-    const result = generateRSS([event], false);
+    const result = generateRSS([event], false, testBaseUrl);
     expect(result, "タイトルに[中止]プレフィックスが付くこと").toContain(
       "<title>[中止] Test Event</title>",
     );
   });
 
   it("addRolePrefix=trueでSPEAKERの場合に[登壇]プレフィックスが付くこと", () => {
-    const result = generateRSS([baseEvent], true);
+    const result = generateRSS([baseEvent], true, testBaseUrl);
     const expected = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
     <title>Mokuroku - ogadra's Schedule</title>
+    <link>https://example.com</link>
     <description>ogadra's speaking schedule and upcoming events</description>
     <language>ja</language>
     <lastBuildDate>Thu, 15 Jan 2026 09:30:00 GMT</lastBuildDate>
@@ -94,14 +98,14 @@ describe("generateRSS", () => {
 
   it("addRolePrefix=trueでATTENDEEの場合に[参加]プレフィックスが付くこと", () => {
     const event: Event = { ...baseEvent, attendeeType: ATTENDEE_TYPE.ATTENDEE };
-    const result = generateRSS([event], true);
+    const result = generateRSS([event], true, testBaseUrl);
     expect(result, "タイトルに[確定] [参加]プレフィックスが付くこと").toContain(
       "<title>[確定] [参加] Test Event</title>",
     );
   });
 
   it("addRolePrefix=falseでroleプレフィックスが付かないこと", () => {
-    const result = generateRSS([baseEvent], false);
+    const result = generateRSS([baseEvent], false, testBaseUrl);
     expect(result, "タイトルにroleプレフィックスが付かないこと").toContain(
       "<title>[確定] Test Event</title>",
     );
@@ -120,11 +124,12 @@ describe("generateRSS", () => {
         lastModified: new Date("2026-01-20T12:00:00.000Z"),
       },
     ];
-    const result = generateRSS(events, true);
+    const result = generateRSS(events, true, testBaseUrl);
     const expected = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
     <title>Mokuroku - ogadra's Schedule</title>
+    <link>https://example.com</link>
     <description>ogadra's speaking schedule and upcoming events</description>
     <language>ja</language>
     <lastBuildDate>Tue, 20 Jan 2026 12:00:00 GMT</lastBuildDate>
@@ -151,7 +156,7 @@ describe("generateRSS", () => {
       summary: "Test <Event> & \"Quotes\" 'Apostrophe'",
       description: "Description with <html> & special chars",
     };
-    const result = generateRSS([event], false);
+    const result = generateRSS([event], false, testBaseUrl);
     expect(result, "summaryがエスケープされていること").toContain(
       "<title>[確定] Test &lt;Event&gt; &amp; &quot;Quotes&quot; &apos;Apostrophe&apos;</title>",
     );
@@ -166,7 +171,7 @@ describe("generateRSS", () => {
       { ...baseEvent, uid: "uid-2", lastModified: new Date("2026-01-20T00:00:00.000Z") },
       { ...baseEvent, uid: "uid-3", lastModified: new Date("2026-01-15T00:00:00.000Z") },
     ];
-    const result = generateRSS(events, false);
+    const result = generateRSS(events, false, testBaseUrl);
     expect(result, "lastBuildDateが最新のlastModifiedであること").toContain(
       "<lastBuildDate>Tue, 20 Jan 2026 00:00:00 GMT</lastBuildDate>",
     );

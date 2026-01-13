@@ -21,6 +21,7 @@ describe("GET /feed.xml", () => {
 <rss version="2.0">
   <channel>
     <title>Mokuroku - ogadra's Schedule</title>
+    <link>http://localhost</link>
     <description>ogadra's speaking schedule and upcoming events</description>
     <language>ja</language>
     <lastBuildDate>Thu, 15 Jan 2026 09:30:00 GMT</lastBuildDate>
