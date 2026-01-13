@@ -9,8 +9,8 @@ export const UrlBuilder: FC<Props> = ({ environment: _environment }) => {
   const scriptSrc = "/client/url-builder.js";
 
   return (
-    <section id="builder" class={containerClass}>
-      <h2>URLを作成</h2>
+    <section id="subscribe" class={containerClass}>
+      <h2>購読する</h2>
       <div class={cardClass}>
         <div id="url-builder-root">
           <noscript>JavaScriptを有効にしてください</noscript>

@@ -74,6 +74,33 @@ const copyBtnClass = css`
   }
 `;
 
+const descriptionClass = css`
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+`;
+
+const stepsClass = css`
+  margin: 1rem 0 0 1.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  
+  li {
+    margin-bottom: 0.25rem;
+  }
+`;
+
+const FEED_INFO = {
+  ical: {
+    description: "Google Calendar, Apple Calendar, Outlook などのカレンダーアプリに追加",
+    steps: ["カレンダーアプリを開く", "「URLでカレンダーを追加」を選択", "上記URLを貼り付け"],
+  },
+  rss: {
+    description: "Feedly, Inoreader などのRSSリーダーで購読",
+    steps: ["RSSリーダーを開く", "「フィードを追加」を選択", "上記URLを貼り付け"],
+  },
+};
+
 const UrlBuilderApp = () => {
   const [format, setFormat] = useState<Format>("ical");
   const [role, setRole] = useState<Role>("all");
@@ -95,6 +122,8 @@ const UrlBuilderApp = () => {
       setTimeout(() => setCopied(false), 2000);
     });
   };
+
+  const feedInfo = FEED_INFO[format];
 
   return (
     <>
@@ -203,6 +232,13 @@ const UrlBuilderApp = () => {
           {copied ? "Copied!" : "Copy"}
         </button>
       </div>
+
+      <p class={descriptionClass}>{feedInfo.description}</p>
+      <ol class={stepsClass}>
+        {feedInfo.steps.map((step) => (
+          <li>{step}</li>
+        ))}
+      </ol>
     </>
   );
 };
