@@ -1,17 +1,5 @@
 import type { Event } from "../repository/types/events";
-import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
-import { EVENT_STATUS } from "../repository/enums/eventStatus";
-
-const STATUS_PREFIX: Record<string, string> = {
-  [EVENT_STATUS.CONFIRMED]: "[確定]",
-  [EVENT_STATUS.TENTATIVE]: "[仮]",
-  [EVENT_STATUS.CANCELLED]: "[中止]",
-};
-
-const ROLE_PREFIX: Record<string, string> = {
-  [ATTENDEE_TYPE.SPEAKER]: "[登壇]",
-  [ATTENDEE_TYPE.ATTENDEE]: "[参加]",
-};
+import { buildEventTitle } from "./eventPrefix";
 
 const escapeXml = (str: string): string => {
   return str
@@ -34,9 +22,7 @@ export const generateRSS = (events: Event[], addRolePrefix: boolean): string => 
 
   const items = events
     .map((event) => {
-      const statusPrefix = STATUS_PREFIX[event.status] ?? "";
-      const rolePrefix = addRolePrefix ? (ROLE_PREFIX[event.attendeeType] ?? "") : "";
-      const title = `${statusPrefix}${rolePrefix}${event.summary}`;
+      const title = buildEventTitle(event.summary, event.status, event.attendeeType, addRolePrefix);
 
       return `    <item>
       <title>${escapeXml(title)}</title>

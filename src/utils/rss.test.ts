@@ -46,7 +46,7 @@ describe("generateRSS", () => {
     <language>ja</language>
     <lastBuildDate>Thu, 15 Jan 2026 09:30:00 GMT</lastBuildDate>
     <item>
-      <title>[確定]Test Event</title>
+      <title>[確定] Test Event</title>
       <description>Test Description</description>
       <pubDate>Thu, 15 Jan 2026 09:30:00 GMT</pubDate>
       <guid>test-uid</guid>
@@ -60,7 +60,7 @@ describe("generateRSS", () => {
     const event: Event = { ...baseEvent, status: EVENT_STATUS.TENTATIVE };
     const result = generateRSS([event], false);
     expect(result, "タイトルに[仮]プレフィックスが付くこと").toContain(
-      "<title>[仮]Test Event</title>",
+      "<title>[仮] Test Event</title>",
     );
   });
 
@@ -68,7 +68,7 @@ describe("generateRSS", () => {
     const event: Event = { ...baseEvent, status: EVENT_STATUS.CANCELLED };
     const result = generateRSS([event], false);
     expect(result, "タイトルに[中止]プレフィックスが付くこと").toContain(
-      "<title>[中止]Test Event</title>",
+      "<title>[中止] Test Event</title>",
     );
   });
 
@@ -82,7 +82,7 @@ describe("generateRSS", () => {
     <language>ja</language>
     <lastBuildDate>Thu, 15 Jan 2026 09:30:00 GMT</lastBuildDate>
     <item>
-      <title>[確定][登壇]Test Event</title>
+      <title>[確定] [登壇] Test Event</title>
       <description>Test Description</description>
       <pubDate>Thu, 15 Jan 2026 09:30:00 GMT</pubDate>
       <guid>test-uid</guid>
@@ -95,15 +95,15 @@ describe("generateRSS", () => {
   it("addRolePrefix=trueでATTENDEEの場合に[参加]プレフィックスが付くこと", () => {
     const event: Event = { ...baseEvent, attendeeType: ATTENDEE_TYPE.ATTENDEE };
     const result = generateRSS([event], true);
-    expect(result, "タイトルに[確定][参加]プレフィックスが付くこと").toContain(
-      "<title>[確定][参加]Test Event</title>",
+    expect(result, "タイトルに[確定] [参加]プレフィックスが付くこと").toContain(
+      "<title>[確定] [参加] Test Event</title>",
     );
   });
 
   it("addRolePrefix=falseでroleプレフィックスが付かないこと", () => {
     const result = generateRSS([baseEvent], false);
     expect(result, "タイトルにroleプレフィックスが付かないこと").toContain(
-      "<title>[確定]Test Event</title>",
+      "<title>[確定] Test Event</title>",
     );
     expect(result, "タイトルに[登壇]が含まれないこと").not.toContain("[登壇]");
   });
@@ -129,13 +129,13 @@ describe("generateRSS", () => {
     <language>ja</language>
     <lastBuildDate>Tue, 20 Jan 2026 12:00:00 GMT</lastBuildDate>
     <item>
-      <title>[確定][登壇]Test Event</title>
+      <title>[確定] [登壇] Test Event</title>
       <description>Test Description</description>
       <pubDate>Thu, 15 Jan 2026 09:30:00 GMT</pubDate>
       <guid>test-uid</guid>
     </item>
     <item>
-      <title>[仮][参加]Second Event</title>
+      <title>[仮] [参加] Second Event</title>
       <description>Test Description</description>
       <pubDate>Tue, 20 Jan 2026 12:00:00 GMT</pubDate>
       <guid>test-uid-2</guid>
@@ -153,7 +153,7 @@ describe("generateRSS", () => {
     };
     const result = generateRSS([event], false);
     expect(result, "summaryがエスケープされていること").toContain(
-      "<title>[確定]Test &lt;Event&gt; &amp; &quot;Quotes&quot; &apos;Apostrophe&apos;</title>",
+      "<title>[確定] Test &lt;Event&gt; &amp; &quot;Quotes&quot; &apos;Apostrophe&apos;</title>",
     );
     expect(result, "descriptionがエスケープされていること").toContain(
       "<description>Description with &lt;html&gt; &amp; special chars</description>",

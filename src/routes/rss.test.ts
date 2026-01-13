@@ -25,19 +25,19 @@ describe("GET /feed.xml", () => {
     <language>ja</language>
     <lastBuildDate>Thu, 15 Jan 2026 09:30:00 GMT</lastBuildDate>
     <item>
-      <title>[確定][登壇]Test Event</title>
+      <title>[確定] [登壇] Test Event</title>
       <description>Test Description</description>
       <pubDate>Thu, 15 Jan 2026 09:30:00 GMT</pubDate>
       <guid>test-event-1</guid>
     </item>
     <item>
-      <title>[確定][参加]Attendee Event</title>
+      <title>[確定] [参加] Attendee Event</title>
       <description>Attending as audience</description>
       <pubDate>Thu, 15 Jan 2026 09:30:00 GMT</pubDate>
       <guid>test-event-2</guid>
     </item>
     <item>
-      <title>[仮][登壇]Tentative Speaker Event</title>
+      <title>[仮] [登壇] Tentative Speaker Event</title>
       <description>Tentative speaking engagement</description>
       <pubDate>Thu, 15 Jan 2026 09:30:00 GMT</pubDate>
       <guid>test-event-3</guid>
@@ -58,7 +58,7 @@ describe("GET /feed.xml", () => {
     expect(text, "test-event-2(ATTENDEE)が含まれないこと").not.toContain(
       "<guid>test-event-2</guid>",
     );
-    expect(text, "roleプレフィックスが付かないこと").toContain("<title>[確定]Test Event</title>");
+    expect(text, "roleプレフィックスが付かないこと").toContain("<title>[確定] Test Event</title>");
     expect(text, "roleプレフィックスが付かないこと").not.toContain("[登壇]");
   });
 
@@ -75,7 +75,7 @@ describe("GET /feed.xml", () => {
       "<guid>test-event-3</guid>",
     );
     expect(text, "roleプレフィックスが付かないこと").toContain(
-      "<title>[確定]Attendee Event</title>",
+      "<title>[確定] Attendee Event</title>",
     );
     expect(text, "roleプレフィックスが付かないこと").not.toContain("[参加]");
   });
@@ -90,9 +90,11 @@ describe("GET /feed.xml", () => {
     expect(text, "test-event-3(TENTATIVE)が含まれないこと").not.toContain(
       "<guid>test-event-3</guid>",
     );
-    expect(text, "roleプレフィックスが付くこと").toContain("<title>[確定][登壇]Test Event</title>");
     expect(text, "roleプレフィックスが付くこと").toContain(
-      "<title>[確定][参加]Attendee Event</title>",
+      "<title>[確定] [登壇] Test Event</title>",
+    );
+    expect(text, "roleプレフィックスが付くこと").toContain(
+      "<title>[確定] [参加] Attendee Event</title>",
     );
   });
 
