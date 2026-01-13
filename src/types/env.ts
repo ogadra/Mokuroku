@@ -1,4 +1,5 @@
 import type { DrizzleD1Database } from "drizzle-orm/d1";
+import type * as schema from "../repository/schema";
 
 export interface Env {
   DB: D1Database;
@@ -6,7 +7,7 @@ export interface Env {
 }
 
 export type DbVariables = {
-  db: DrizzleD1Database;
+  db: DrizzleD1Database<typeof schema>;
 };
 
 export type AppEnv = { Bindings: Env; Variables: DbVariables };
