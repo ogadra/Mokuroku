@@ -1,3 +1,4 @@
+import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
 import type { Event } from "../repository/types/events";
 
 export function formatDateUTC(date: Date): string {
@@ -10,7 +11,7 @@ export function formatDateUTC(date: Date): string {
   return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
 }
 
-export function generateICS(eventList: Event[]): string {
+export function generateICS(eventList: Event[], addRolePrefix?: boolean): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -24,13 +25,18 @@ export function generateICS(eventList: Event[]): string {
   ];
 
   for (const event of eventList) {
+    const prefix = addRolePrefix
+      ? event.attendeeType === ATTENDEE_TYPE.SPEAKER
+        ? "[登壇] "
+        : "[参加] "
+      : "";
     lines.push(
       "BEGIN:VEVENT",
       `UID:${event.uid}`,
       `DTSTAMP:${formatDateUTC(new Date())}`,
       `DTSTART:${formatDateUTC(event.dtstart)}`,
       `DTEND:${formatDateUTC(event.dtend)}`,
-      `SUMMARY:${event.summary}`,
+      `SUMMARY:${prefix}${event.summary}`,
       `STATUS:${event.status}`,
       `CLASS:${event.class}`,
       `DESCRIPTION:${event.description}`,

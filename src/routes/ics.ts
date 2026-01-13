@@ -37,7 +37,7 @@ icsRoutes.get("/", async (c) => {
   const eventStatus = status?.toUpperCase() as EventStatusType | undefined;
 
   const eventData = await findEventsByFilter(c.var.db, attendeeType, eventStatus);
-  const ics = generateICS(eventData);
+  const ics = generateICS(eventData, role === undefined);
   return new Response(ics, {
     status: 200,
     headers: {

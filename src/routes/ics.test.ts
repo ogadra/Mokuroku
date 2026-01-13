@@ -32,7 +32,7 @@ describe("GET /schedule.ics", () => {
       "DTSTAMP:20260101T000000Z",
       "DTSTART:20260201T100000Z",
       "DTEND:20260201T120000Z",
-      "SUMMARY:Test Event",
+      "SUMMARY:[登壇] Test Event",
       "STATUS:CONFIRMED",
       "CLASS:PUBLIC",
       "DESCRIPTION:Test Description",
@@ -48,7 +48,7 @@ describe("GET /schedule.ics", () => {
       "DTSTAMP:20260101T000000Z",
       "DTSTART:20260301T140000Z",
       "DTEND:20260301T160000Z",
-      "SUMMARY:Attendee Event",
+      "SUMMARY:[参加] Attendee Event",
       "STATUS:CONFIRMED",
       "CLASS:PUBLIC",
       "DESCRIPTION:Attending as audience",
@@ -64,7 +64,7 @@ describe("GET /schedule.ics", () => {
       "DTSTAMP:20260101T000000Z",
       "DTSTART:20260401T090000Z",
       "DTEND:20260401T110000Z",
-      "SUMMARY:Tentative Speaker Event",
+      "SUMMARY:[登壇] Tentative Speaker Event",
       "STATUS:TENTATIVE",
       "CLASS:PUBLIC",
       "DESCRIPTION:Tentative speaking engagement",
@@ -83,7 +83,7 @@ describe("GET /schedule.ics", () => {
     );
   });
 
-  it("role=speaker指定時にSPEAKERイベントのみ返す", async () => {
+  it("role=speaker指定時にSPEAKERイベントのみ返し、プレフィックスなし", async () => {
     const response = await SELF.fetch(`${HOST}/schedule.ics?role=speaker`);
 
     expect(response.status, "ステータスコードが200であること").toBe(200);
@@ -91,9 +91,11 @@ describe("GET /schedule.ics", () => {
     expect(text, "test-event-1(SPEAKER)が含まれること").toContain("UID:test-event-1");
     expect(text, "test-event-3(SPEAKER)が含まれること").toContain("UID:test-event-3");
     expect(text, "test-event-2(ATTENDEE)が含まれないこと").not.toContain("UID:test-event-2");
+    expect(text, "SUMMARYにプレフィックスが付かないこと").toContain("SUMMARY:Test Event");
+    expect(text, "SUMMARYにプレフィックスが付かないこと").not.toContain("SUMMARY:[登壇]");
   });
 
-  it("role=attendee指定時にATTENDEEイベントのみ返す", async () => {
+  it("role=attendee指定時にATTENDEEイベントのみ返し、プレフィックスなし", async () => {
     const response = await SELF.fetch(`${HOST}/schedule.ics?role=attendee`);
 
     expect(response.status, "ステータスコードが200であること").toBe(200);
@@ -101,9 +103,11 @@ describe("GET /schedule.ics", () => {
     expect(text, "test-event-2(ATTENDEE)が含まれること").toContain("UID:test-event-2");
     expect(text, "test-event-1(SPEAKER)が含まれないこと").not.toContain("UID:test-event-1");
     expect(text, "test-event-3(SPEAKER)が含まれないこと").not.toContain("UID:test-event-3");
+    expect(text, "SUMMARYにプレフィックスが付かないこと").toContain("SUMMARY:Attendee Event");
+    expect(text, "SUMMARYにプレフィックスが付かないこと").not.toContain("SUMMARY:[参加]");
   });
 
-  it("status=confirmed指定時にCONFIRMEDイベントのみ返す", async () => {
+  it("status=confirmed指定時にCONFIRMEDイベントのみ返し、プレフィックスあり", async () => {
     const response = await SELF.fetch(`${HOST}/schedule.ics?status=confirmed`);
 
     expect(response.status, "ステータスコードが200であること").toBe(200);
@@ -111,9 +115,13 @@ describe("GET /schedule.ics", () => {
     expect(text, "test-event-1(CONFIRMED)が含まれること").toContain("UID:test-event-1");
     expect(text, "test-event-2(CONFIRMED)が含まれること").toContain("UID:test-event-2");
     expect(text, "test-event-3(TENTATIVE)が含まれないこと").not.toContain("UID:test-event-3");
+    expect(text, "SUMMARYに[登壇]プレフィックスが付くこと").toContain("SUMMARY:[登壇] Test Event");
+    expect(text, "SUMMARYに[参加]プレフィックスが付くこと").toContain(
+      "SUMMARY:[参加] Attendee Event",
+    );
   });
 
-  it("status=tentative指定時にTENTATIVEイベントのみ返す", async () => {
+  it("status=tentative指定時にTENTATIVEイベントのみ返し、プレフィックスあり", async () => {
     const response = await SELF.fetch(`${HOST}/schedule.ics?status=tentative`);
 
     expect(response.status, "ステータスコードが200であること").toBe(200);
@@ -121,9 +129,12 @@ describe("GET /schedule.ics", () => {
     expect(text, "test-event-3(TENTATIVE)が含まれること").toContain("UID:test-event-3");
     expect(text, "test-event-1(CONFIRMED)が含まれないこと").not.toContain("UID:test-event-1");
     expect(text, "test-event-2(CONFIRMED)が含まれないこと").not.toContain("UID:test-event-2");
+    expect(text, "SUMMARYに[登壇]プレフィックスが付くこと").toContain(
+      "SUMMARY:[登壇] Tentative Speaker Event",
+    );
   });
 
-  it("roleとstatusの両方を指定した時に条件に合致するイベントのみ返す", async () => {
+  it("roleとstatusの両方を指定した時に条件に合致するイベントのみ返し、プレフィックスなし", async () => {
     const response = await SELF.fetch(`${HOST}/schedule.ics?role=speaker&status=confirmed`);
 
     expect(response.status, "ステータスコードが200であること").toBe(200);
@@ -135,6 +146,8 @@ describe("GET /schedule.ics", () => {
     expect(text, "test-event-3(SPEAKER+TENTATIVE)が含まれないこと").not.toContain(
       "UID:test-event-3",
     );
+    expect(text, "SUMMARYにプレフィックスが付かないこと").toContain("SUMMARY:Test Event");
+    expect(text, "SUMMARYにプレフィックスが付かないこと").not.toContain("SUMMARY:[登壇]");
   });
 
   it("無効なroleパラメータに対して400エラーを返す", async () => {
