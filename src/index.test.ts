@@ -4,11 +4,17 @@ import { describe, it, expect } from "vitest";
 const HOST = "http://localhost";
 
 describe("GET /", () => {
-  it("returns Hello Mokuroku!", async () => {
+  it("returns HTML landing page", async () => {
     const response = await SELF.fetch(`${HOST}/`);
     expect(response.status, "ステータスコードが200であること").toBe(200);
-    expect(await response.text(), "レスポンス本文がHello Mokuroku!であること").toBe(
-      "Hello Mokuroku!",
+    expect(response.headers.get("content-type"), "Content-Typeがtext/htmlであること").toBe(
+      "text/html; charset=UTF-8",
     );
+    const body = await response.text();
+    expect(body, "HTMLにMokurokuタイトルが含まれること").toContain(
+      "<title>Mokuroku - ogadraの登壇予定</title>",
+    );
+    expect(body, "HTMLにiCal URLが含まれること").toContain("/schedule.ics");
+    expect(body, "HTMLにRSS URLが含まれること").toContain("/feed.xml");
   });
 });

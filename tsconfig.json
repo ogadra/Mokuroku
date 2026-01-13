@@ -6,7 +6,9 @@
     "strict": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "types": ["@cloudflare/workers-types"]
+    "types": ["@cloudflare/workers-types"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
   },
   "include": ["src", "*.config.ts"],
   "exclude": ["src/**/*.test.ts"]

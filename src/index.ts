@@ -4,15 +4,13 @@ import { connectDb } from "./middleware/connectDb";
 import { eventRoutes } from "./routes/event";
 import { icsRoutes } from "./routes/ics";
 import { rssRoutes } from "./routes/rss";
+import { landingRoutes } from "./routes/landing";
 
 const app = new Hono<AppEnv>();
 
 app.use("*", connectDb);
 
-app.get("/", (c) => {
-  return c.text("Hello Mokuroku!");
-});
-
+app.route("/", landingRoutes);
 app.route("/schedule.ics", icsRoutes);
 app.route("/feed.xml", rssRoutes);
 app.route("/event", eventRoutes);
