@@ -16,5 +16,8 @@ describe("GET /", () => {
     );
     expect(body, "HTMLにiCal URLが含まれること").toContain("/schedule.ics");
     expect(body, "HTMLにRSS URLが含まれること").toContain("/feed.xml");
+    expect(body, "HTMLにURLビルダーセクションが含まれること").toContain('id="builder"');
+    expect(body, "HTMLにURLビルダーのルート要素が含まれること").toContain('id="url-builder-root"');
+    expect(body, "HTMLにクライアントスクリプトが含まれること").toContain("url-builder");
   });
 });
