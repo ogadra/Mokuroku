@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { bearerAuth } from "hono/bearer-auth";
 import {
   findAllEvents,
   findEventByUid,
@@ -9,6 +10,15 @@ import {
 import type { AppEnv } from "../types/env";
 
 const eventRoutes = new Hono<AppEnv>();
+
+// POST/PUT/DELETEに認証を適用
+eventRoutes.use("*", async (c, next) => {
+  if (c.req.method === "GET") {
+    return next();
+  }
+  const auth = bearerAuth({ token: c.env.API_TOKEN });
+  return auth(c, next);
+});
 
 // GET /event - イベント一覧取得
 eventRoutes.get("/", async (c) => {
