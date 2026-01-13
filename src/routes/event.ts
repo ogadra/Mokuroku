@@ -1,7 +1,5 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { bearerAuth } from "hono/bearer-auth";
-import { timingSafeEqual } from "hono/utils/buffer";
 import {
   findAllEvents,
   findEventByUid,
@@ -10,23 +8,9 @@ import {
   deleteEvent,
 } from "../queries/event";
 import type { AppEnv } from "../types/env";
-import { hashToken } from "../utils/hash";
+import { requireAuth } from "../middleware/auth";
 
 const eventRoutes = new Hono<AppEnv>();
-
-// POST/PUT/DELETEに認証を適用
-eventRoutes.use("*", async (c, next) => {
-  if (c.req.method === "GET") {
-    return next();
-  }
-  const auth = bearerAuth({
-    verifyToken: async (token) => {
-      const hashedInput = await hashToken(token);
-      return timingSafeEqual(hashedInput, c.env.API_TOKEN_HASH);
-    },
-  });
-  return auth(c, next);
-});
 
 // GET /event - イベント一覧取得
 eventRoutes.get("/", async (c) => {
@@ -45,7 +29,7 @@ eventRoutes.get("/:uid", async (c) => {
 });
 
 // POST /event - イベント作成
-eventRoutes.post("/", async (c) => {
+eventRoutes.post("/", requireAuth, async (c) => {
   const body = await c.req.json();
   const result = await createEvent(c.var.db, {
     ...body,
@@ -56,7 +40,7 @@ eventRoutes.post("/", async (c) => {
 });
 
 // PUT /event/:uid - イベント更新
-eventRoutes.put("/:uid", async (c) => {
+eventRoutes.put("/:uid", requireAuth, async (c) => {
   const uid = c.req.param("uid");
   const body = await c.req.json();
 
@@ -73,7 +57,7 @@ eventRoutes.put("/:uid", async (c) => {
 });
 
 // DELETE /event/:uid - イベント削除
-eventRoutes.delete("/:uid", async (c) => {
+eventRoutes.delete("/:uid", requireAuth, async (c) => {
   const uid = c.req.param("uid");
   const deleted = await deleteEvent(c.var.db, uid);
 
