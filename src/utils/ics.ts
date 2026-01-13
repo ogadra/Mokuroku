@@ -1,4 +1,5 @@
 import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
+import { EVENT_STATUS } from "../repository/enums/eventStatus";
 import type { Event } from "../repository/types/events";
 
 export function formatDateUTC(date: Date): string {
@@ -25,18 +26,24 @@ export function generateICS(eventList: Event[], addRolePrefix?: boolean): string
   ];
 
   for (const event of eventList) {
-    const prefix = addRolePrefix
+    const rolePrefix = addRolePrefix
       ? event.attendeeType === ATTENDEE_TYPE.SPEAKER
         ? "[登壇] "
         : "[参加] "
       : "";
+    const statusPrefix =
+      event.status === EVENT_STATUS.TENTATIVE
+        ? "[仮] "
+        : event.status === EVENT_STATUS.CANCELLED
+          ? "[中止] "
+          : "[確定] ";
     lines.push(
       "BEGIN:VEVENT",
       `UID:${event.uid}`,
       `DTSTAMP:${formatDateUTC(new Date())}`,
       `DTSTART:${formatDateUTC(event.dtstart)}`,
       `DTEND:${formatDateUTC(event.dtend)}`,
-      `SUMMARY:${prefix}${event.summary}`,
+      `SUMMARY:${statusPrefix}${rolePrefix}${event.summary}`,
       `STATUS:${event.status}`,
       `CLASS:${event.class}`,
       `DESCRIPTION:${event.description}`,
