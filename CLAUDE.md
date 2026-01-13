@@ -34,6 +34,10 @@ pnpm deploy
 - **Entry point**: `src/index.ts`
 - **Config**: `wrangler.jsonc`
 
+## Coding Guidelines
+
+- Prefer constants over string literals (e.g., use `ATTENDEE_TYPE.SPEAKER` instead of `"SPEAKER"`)
+
 ## Testing Guidelines
 
 - Keep tests for the same endpoint in a single `it` block (avoid duplicate requests)
