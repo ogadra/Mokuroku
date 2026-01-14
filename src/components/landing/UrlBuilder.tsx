@@ -1,13 +1,12 @@
 import type { FC } from "hono/jsx";
 import { containerClass, cardClass } from "../Layout";
+import scriptSrc from "/src/client/UrlBuilder.client.tsx?url";
 
 type Props = {
   environment: string;
 };
 
 export const UrlBuilder: FC<Props> = ({ environment: _environment }) => {
-  const scriptSrc = "/client/url-builder.js";
-
   return (
     <section id="builder" class={containerClass}>
       <h2>URLを作成</h2>

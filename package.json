@@ -8,10 +8,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "dev": "pnpm build:client && vite",
-    "build": "vite build --mode client && vite build --mode server",
-    "build:client": "vite build --mode client",
-    "build:server": "vite build --mode server",
+    "dev": "vite",
+    "build": "vite build",
     "deploy": "pnpm build && wrangler deploy",
     "format": "oxfmt",
     "format:check": "oxfmt --check",

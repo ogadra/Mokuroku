@@ -10,11 +10,6 @@ const app = new Hono<AppEnv>();
 
 app.use("*", connectDb);
 
-app.get("/client/*", async (c) => {
-  const url = new URL(c.req.url);
-  return c.env.ASSETS.fetch(new Request(url.toString()));
-});
-
 app.route("/", landingRoutes);
 app.route("/schedule.ics", icsRoutes);
 app.route("/feed.xml", rssRoutes);
