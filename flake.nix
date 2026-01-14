@@ -11,9 +11,26 @@
       forAllSystems = nixpkgs.lib.genAttrs systems;
     in
     {
+      packages = forAllSystems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        in
+        {
+          chrome-devtools-mcp = pkgs.writeShellScriptBin "chrome-devtools-mcp" ''
+            exec ${pkgs.pnpm}/bin/pnpm dlx chrome-devtools-mcp@latest -e ${pkgs.google-chrome}/bin/google-chrome-stable "$@"
+          '';
+        }
+      );
+
       devShells = forAllSystems (system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
         in
         {
           default = pkgs.mkShell {
