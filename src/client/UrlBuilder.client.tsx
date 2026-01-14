@@ -2,10 +2,17 @@
 import { useState } from "hono/jsx";
 import { render } from "hono/jsx/dom";
 import { css, Style } from "hono/css";
+import { ATTENDEE_TYPE, type AttendeeType } from "../repository/enums/attendeeType";
+import { EVENT_STATUS, type EventStatusType } from "../repository/enums/eventStatus";
 
-type Format = "ical" | "rss";
-type Role = "all" | "speaker" | "attendee";
-type Status = "all" | "confirmed" | "tentative";
+const FORMAT = {
+  ICAL: "ical",
+  RSS: "rss",
+} as const;
+
+type Format = (typeof FORMAT)[keyof typeof FORMAT];
+type Role = "all" | Lowercase<AttendeeType>;
+type Status = "all" | Lowercase<EventStatusType>;
 
 const fieldsetClass = css`
   border: none;
@@ -76,14 +83,14 @@ const copyBtnClass = css`
 `;
 
 const UrlBuilderApp = () => {
-  const [format, setFormat] = useState<Format>("ical");
+  const [format, setFormat] = useState<Format>(FORMAT.ICAL);
   const [role, setRole] = useState<Role>("all");
   const [status, setStatus] = useState<Status>("all");
   const [copied, setCopied] = useState(false);
 
   const buildUrl = (): string => {
     const base = window.location.origin;
-    const path = format === "ical" ? "/schedule.ics" : "/feed.xml";
+    const path = format === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
     const params = new URLSearchParams();
     if (role !== "all") params.set("role", role);
     if (status !== "all") params.set("status", status);
@@ -107,9 +114,9 @@ const UrlBuilderApp = () => {
             <input
               type="radio"
               name="format"
-              value="ical"
-              checked={format === "ical"}
-              onChange={() => setFormat("ical")}
+              value={FORMAT.ICAL}
+              checked={format === FORMAT.ICAL}
+              onChange={() => setFormat(FORMAT.ICAL)}
             />
             iCal
           </label>
@@ -117,9 +124,9 @@ const UrlBuilderApp = () => {
             <input
               type="radio"
               name="format"
-              value="rss"
-              checked={format === "rss"}
-              onChange={() => setFormat("rss")}
+              value={FORMAT.RSS}
+              checked={format === FORMAT.RSS}
+              onChange={() => setFormat(FORMAT.RSS)}
             />
             RSS
           </label>
