@@ -66,7 +66,11 @@ const legendClass = css`
 const radioGroupClass = css`
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem;
+  
+  @media (min-width: 400px) {
+    gap: 1rem;
+  }
 `;
 
 const labelClass = css`
@@ -74,13 +78,20 @@ const labelClass = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.5rem;
   border: 1px solid var(--color-border);
   border-radius: 6px;
   cursor: pointer;
   color: var(--color-text-muted);
   background: var(--color-bg);
   transition: all 0.2s;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  
+  @media (min-width: 400px) {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
   
   &:hover {
     border-color: var(--color-primary);
@@ -157,21 +168,58 @@ const stepsClass = css`
   }
 `;
 
-const swipeHintClass = css`
-  display: none;
-  justify-content: space-between;
-  font-size: 0.75rem;
+const swipeContainerClass = css`
+  position: relative;
+  touch-action: pan-y;
+`;
+
+const slidingWrapperClass = css`
+  position: relative;
+`;
+
+const slidingOverflowClass = css`
+  overflow: hidden;
+`;
+
+const slidingContainerClass = css`
+  display: flex;
+  width: 200%;
+  gap: 2rem;
+  transition: transform 0.3s ease-out;
+`;
+
+const panelClass = css`
+  width: 50%;
+  flex-shrink: 0;
+`;
+
+const swipeArrowClass = css`
+  display: flex;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: var(--color-bg);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
   color: var(--color-text-muted);
-  margin-bottom: 1rem;
-  padding: 0 0.5rem;
+  transition: all 0.2s;
+  z-index: 10;
   
-  @media (max-width: 640px) {
-    display: flex;
+  &:hover {
+    color: var(--color-primary);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
   }
 `;
 
-const swipeContainerClass = css`
-  touch-action: pan-y;
+const swipeArrowHiddenClass = css`
+  opacity: 0;
+  pointer-events: none;
 `;
 
 const FEED_INFO = {
@@ -211,133 +259,182 @@ const UrlBuilderApp = () => {
     }
   };
 
-  const buildUrl = (): string => {
+  const buildUrl = (targetFormat: Format = format): string => {
     const base = window.location.origin;
-    const path = format === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
+    const path = targetFormat === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
     const params = new URLSearchParams();
     if (role !== "all") params.set("role", role);
     if (status !== "all") params.set("status", status);
     return params.toString() ? `${base}${path}?${params}` : `${base}${path}`;
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(buildUrl()).then(() => {
+  const copyToClipboard = (url: string) => {
+    navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
-  const feedInfo = FEED_INFO[format];
+  const isIcal = format === FORMAT.ICAL;
+  const isRss = format === FORMAT.RSS;
+
+  const renderInfoPanel = (panelFormat: Format) => {
+    const info = FEED_INFO[panelFormat];
+    const url = buildUrl(panelFormat);
+    return (
+      <div class={panelClass}>
+        <div class={urlCopyClass}>
+          <input type="text" class={inputClass} value={url} readonly />
+          <button class={copyBtnClass} onClick={() => copyToClipboard(url)}>
+            {copied ? "Copied!" : "Copy"}
+          </button>
+        </div>
+
+        <p class={descriptionClass}>{info.description}</p>
+        <ol class={stepsClass}>
+          {info.steps.map((step) => (
+            <li>{step}</li>
+          ))}
+        </ol>
+      </div>
+    );
+  };
 
   return (
     <>
       <Style />
       <div class={swipeContainerClass} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <div class={tabsClass}>
-          <button
-            class={format === FORMAT.ICAL ? tabActiveClass : tabClass}
-            onClick={() => setFormat(FORMAT.ICAL)}
-          >
+          <button class={isIcal ? tabActiveClass : tabClass} onClick={() => setFormat(FORMAT.ICAL)}>
             iCal
           </button>
-          <button
-            class={format === FORMAT.RSS ? tabActiveClass : tabClass}
-            onClick={() => setFormat(FORMAT.RSS)}
-          >
+          <button class={isRss ? tabActiveClass : tabClass} onClick={() => setFormat(FORMAT.RSS)}>
             RSS
           </button>
         </div>
-        <div class={swipeHintClass}>
-          <span>&lt;</span>
-          <span>&gt;</span>
+
+        <fieldset class={fieldsetClass}>
+          <legend class={legendClass}>参加種別</legend>
+          <div class={radioGroupClass}>
+            <label class={labelClass}>
+              <input
+                type="radio"
+                name="role"
+                value="all"
+                checked={role === "all"}
+                onChange={() => setRole("all")}
+              />
+              すべて
+            </label>
+            <label class={labelClass}>
+              <input
+                type="radio"
+                name="role"
+                value="speaker"
+                checked={role === "speaker"}
+                onChange={() => setRole("speaker")}
+              />
+              登壇のみ
+            </label>
+            <label class={labelClass}>
+              <input
+                type="radio"
+                name="role"
+                value="attendee"
+                checked={role === "attendee"}
+                onChange={() => setRole("attendee")}
+              />
+              参加のみ
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class={fieldsetClass}>
+          <legend class={legendClass}>ステータス</legend>
+          <div class={radioGroupClass}>
+            <label class={labelClass}>
+              <input
+                type="radio"
+                name="status"
+                value="all"
+                checked={status === "all"}
+                onChange={() => setStatus("all")}
+              />
+              すべて
+            </label>
+            <label class={labelClass}>
+              <input
+                type="radio"
+                name="status"
+                value="confirmed"
+                checked={status === "confirmed"}
+                onChange={() => setStatus("confirmed")}
+              />
+              確定のみ
+            </label>
+            <label class={labelClass}>
+              <input
+                type="radio"
+                name="status"
+                value="tentative"
+                checked={status === "tentative"}
+                onChange={() => setStatus("tentative")}
+              />
+              仮のみ
+            </label>
+          </div>
+        </fieldset>
+
+        <div class={slidingWrapperClass}>
+          <button
+            class={`${swipeArrowClass} ${isIcal ? swipeArrowHiddenClass : ""}`}
+            onClick={() => setFormat(FORMAT.ICAL)}
+            aria-label="iCalに切り替え"
+            style={{ left: "-1rem" }}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <button
+            class={`${swipeArrowClass} ${isRss ? swipeArrowHiddenClass : ""}`}
+            onClick={() => setFormat(FORMAT.RSS)}
+            aria-label="RSSに切り替え"
+            style={{ right: "-1rem" }}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+          <div class={slidingOverflowClass}>
+            <div
+              class={slidingContainerClass}
+              style={{ transform: isRss ? "translateX(calc(-50% - 2rem))" : "translateX(0)" }}
+            >
+              {renderInfoPanel(FORMAT.ICAL)}
+              {renderInfoPanel(FORMAT.RSS)}
+            </div>
+          </div>
         </div>
       </div>
-
-      <fieldset class={fieldsetClass}>
-        <legend class={legendClass}>参加種別</legend>
-        <div class={radioGroupClass}>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="role"
-              value="all"
-              checked={role === "all"}
-              onChange={() => setRole("all")}
-            />
-            すべて
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="role"
-              value="speaker"
-              checked={role === "speaker"}
-              onChange={() => setRole("speaker")}
-            />
-            登壇のみ
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="role"
-              value="attendee"
-              checked={role === "attendee"}
-              onChange={() => setRole("attendee")}
-            />
-            参加のみ
-          </label>
-        </div>
-      </fieldset>
-
-      <fieldset class={fieldsetClass}>
-        <legend class={legendClass}>ステータス</legend>
-        <div class={radioGroupClass}>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="status"
-              value="all"
-              checked={status === "all"}
-              onChange={() => setStatus("all")}
-            />
-            すべて
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="status"
-              value="confirmed"
-              checked={status === "confirmed"}
-              onChange={() => setStatus("confirmed")}
-            />
-            確定のみ
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="status"
-              value="tentative"
-              checked={status === "tentative"}
-              onChange={() => setStatus("tentative")}
-            />
-            仮のみ
-          </label>
-        </div>
-      </fieldset>
-
-      <div class={urlCopyClass}>
-        <input type="text" class={inputClass} value={buildUrl()} readonly />
-        <button class={copyBtnClass} onClick={copyToClipboard}>
-          {copied ? "Copied!" : "Copy"}
-        </button>
-      </div>
-
-      <p class={descriptionClass}>{feedInfo.description}</p>
-      <ol class={stepsClass}>
-        {feedInfo.steps.map((step) => (
-          <li>{step}</li>
-        ))}
-      </ol>
     </>
   );
 };
