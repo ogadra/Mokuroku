@@ -12,5 +12,5 @@
     "jsxImportSource": "hono/jsx"
   },
   "include": ["src", "*.config.ts"],
-  "exclude": ["src/**/*.test.ts", "src/client/**/*"]
+  "exclude": ["src/**/*.test.ts"]
 }

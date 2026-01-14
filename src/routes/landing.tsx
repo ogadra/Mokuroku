@@ -9,12 +9,11 @@ import { ExamplesSection } from "../components/landing/ExamplesSection";
 const landingRoutes = new Hono<AppEnv>();
 
 landingRoutes.get("/", (c) => {
-  const environment = c.env.ENVIRONMENT;
   return c.html(
     <Layout>
       <HeroSection />
       <main>
-        <UrlBuilder environment={environment} />
+        <UrlBuilder />
         <ParameterTable />
         <ExamplesSection />
       </main>

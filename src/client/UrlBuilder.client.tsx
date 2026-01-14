@@ -1,11 +1,18 @@
 /** @jsxImportSource hono/jsx/dom */
-import { useState } from "hono/jsx";
+import { useState, useRef } from "hono/jsx";
 import { render } from "hono/jsx/dom";
 import { css, Style } from "hono/css";
+import type { AttendeeType } from "../repository/enums/attendeeType";
+import type { EventStatusType } from "../repository/enums/eventStatus";
 
-type Format = "ical" | "rss";
-type Role = "all" | "speaker" | "attendee";
-type Status = "all" | "confirmed" | "tentative";
+const FORMAT = {
+  ICAL: "ical",
+  RSS: "rss",
+} as const;
+
+type Format = (typeof FORMAT)[keyof typeof FORMAT];
+type Role = "all" | Lowercase<AttendeeType>;
+type Status = "all" | Lowercase<EventStatusType>;
 
 const tabsClass = css`
   display: flex;
@@ -14,6 +21,7 @@ const tabsClass = css`
 `;
 
 const tabClass = css`
+  flex: 1;
   padding: 0.75rem 1.5rem;
   border: none;
   background: transparent;
@@ -32,6 +40,7 @@ const tabClass = css`
 `;
 
 const tabActiveClass = css`
+  flex: 1;
   padding: 0.75rem 1.5rem;
   border: none;
   background: transparent;
@@ -40,6 +49,7 @@ const tabActiveClass = css`
   margin-bottom: -1px;
   color: var(--color-primary);
   border-bottom: 2px solid var(--color-primary);
+  box-shadow: 0 4px 6px -4px rgba(59, 130, 246, 0.5);
 `;
 
 const fieldsetClass = css`
@@ -60,11 +70,32 @@ const radioGroupClass = css`
 `;
 
 const labelClass = css`
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
   cursor: pointer;
   color: var(--color-text-muted);
+  background: var(--color-bg);
+  transition: all 0.2s;
+  
+  &:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+  
+  input {
+    display: none;
+  }
+  
+  &:has(input:checked) {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+  }
 `;
 
 const urlCopyClass = css`
@@ -126,6 +157,23 @@ const stepsClass = css`
   }
 `;
 
+const swipeHintClass = css`
+  display: none;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+  
+  @media (max-width: 640px) {
+    display: flex;
+  }
+`;
+
+const swipeContainerClass = css`
+  touch-action: pan-y;
+`;
+
 const FEED_INFO = {
   ical: {
     description: "Google Calendar, Apple Calendar, Outlook などのカレンダーアプリに追加",
@@ -137,15 +185,35 @@ const FEED_INFO = {
   },
 };
 
+const SWIPE_THRESHOLD = 50;
+
 const UrlBuilderApp = () => {
-  const [format, setFormat] = useState<Format>("ical");
+  const [format, setFormat] = useState<Format>(FORMAT.ICAL);
   const [role, setRole] = useState<Role>("all");
   const [status, setStatus] = useState<Status>("all");
   const [copied, setCopied] = useState(false);
+  const touchStartX = useRef<number>(0);
+
+  const handleTouchStart = (e: TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = (touchStartX.current ?? 0) - touchEndX;
+
+    if (Math.abs(diff) > SWIPE_THRESHOLD) {
+      if (diff > 0) {
+        setFormat(FORMAT.RSS);
+      } else {
+        setFormat(FORMAT.ICAL);
+      }
+    }
+  };
 
   const buildUrl = (): string => {
     const base = window.location.origin;
-    const path = format === "ical" ? "/schedule.ics" : "/feed.xml";
+    const path = format === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
     const params = new URLSearchParams();
     if (role !== "all") params.set("role", role);
     if (status !== "all") params.set("status", status);
@@ -164,19 +232,25 @@ const UrlBuilderApp = () => {
   return (
     <>
       <Style />
-      <div class={tabsClass}>
-        <button
-          class={format === "ical" ? tabActiveClass : tabClass}
-          onClick={() => setFormat("ical")}
-        >
-          iCal
-        </button>
-        <button
-          class={format === "rss" ? tabActiveClass : tabClass}
-          onClick={() => setFormat("rss")}
-        >
-          RSS
-        </button>
+      <div class={swipeContainerClass} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <div class={tabsClass}>
+          <button
+            class={format === FORMAT.ICAL ? tabActiveClass : tabClass}
+            onClick={() => setFormat(FORMAT.ICAL)}
+          >
+            iCal
+          </button>
+          <button
+            class={format === FORMAT.RSS ? tabActiveClass : tabClass}
+            onClick={() => setFormat(FORMAT.RSS)}
+          >
+            RSS
+          </button>
+        </div>
+        <div class={swipeHintClass}>
+          <span>&lt;</span>
+          <span>&gt;</span>
+        </div>
       </div>
 
       <fieldset class={fieldsetClass}>
