@@ -94,14 +94,10 @@ const UrlBuilderApp = () => {
 
   const renderInfoPanel = (panelFormat: Format) => {
     const url = buildUrl(panelFormat);
-    const path = panelFormat === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
-    const params = new URLSearchParams();
-    if (role !== "all") params.set("role", role);
-    if (status !== "all") params.set("status", status);
-    const queryString = params.toString() ? `?${params}` : "";
+    const parsedUrl = new URL(url);
 
     if (panelFormat === FORMAT.ICAL) {
-      const webcalUrl = `webcal://${window.location.host}${path}${queryString}`;
+      const webcalUrl = `webcal://${parsedUrl.host}${parsedUrl.pathname}${parsedUrl.search}`;
       const googleUrl = `https://www.google.com/calendar/render?cid=${encodeURIComponent(webcalUrl)}`;
 
       return (
