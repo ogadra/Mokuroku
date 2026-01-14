@@ -24,11 +24,9 @@ import {
   appleBtnClass,
   googleBtnClass,
   methodsClass,
-  methodClass,
-  methodContentClass,
-  methodTitleClass,
 } from "./UrlBuilder.styles";
 import { RadioGroup } from "./components/RadioGroup";
+import { MethodSection } from "./components/MethodSection";
 import { AppleIcon } from "./icons/AppleIcon";
 import { GoogleIcon } from "./icons/GoogleIcon";
 import { RssIcon } from "./icons/RssIcon";
@@ -121,32 +119,28 @@ const UrlBuilderApp = () => {
           </div>
 
           <div class={methodsClass}>
-            <div class={methodClass}>
-              <span class={methodTitleClass}>ワンクリックで追加</span>
-              <div class={methodContentClass}>
-                <a class={`${feedBtnClass} ${appleBtnClass}`} href={webcalUrl}>
-                  <AppleIcon />
-                  Apple Calendar
-                </a>
-                <a
-                  class={`${feedBtnClass} ${googleBtnClass}`}
-                  href={googleUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <GoogleIcon />
-                  Google Calendar
-                </a>
-              </div>
-            </div>
-            <div class={methodClass}>
-              <span class={methodTitleClass}>URLで登録</span>
+            <MethodSection title="ワンクリックで追加">
+              <a class={`${feedBtnClass} ${appleBtnClass}`} href={webcalUrl}>
+                <AppleIcon />
+                Apple Calendar
+              </a>
+              <a
+                class={`${feedBtnClass} ${googleBtnClass}`}
+                href={googleUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <GoogleIcon />
+                Google Calendar
+              </a>
+            </MethodSection>
+            <MethodSection title="URLで登録">
               <ol class={stepsClass}>
                 <li>カレンダーアプリを開く</li>
                 <li>「URLでカレンダーを追加」を選択</li>
                 <li>上記URLを貼り付け</li>
               </ol>
-            </div>
+            </MethodSection>
           </div>
         </div>
       );
@@ -162,28 +156,24 @@ const UrlBuilderApp = () => {
         </div>
 
         <div class={methodsClass}>
-          <div class={methodClass}>
-            <span class={methodTitleClass}>ブラウザで開く</span>
-            <div class={methodContentClass}>
-              <a
-                class={`${feedBtnClass} ${rssBtnClass}`}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <RssIcon />
-                RSSフィードを開く
-              </a>
-            </div>
-          </div>
-          <div class={methodClass}>
-            <span class={methodTitleClass}>RSSリーダーで登録</span>
+          <MethodSection title="ブラウザで開く">
+            <a
+              class={`${feedBtnClass} ${rssBtnClass}`}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <RssIcon />
+              RSSフィードを開く
+            </a>
+          </MethodSection>
+          <MethodSection title="RSSリーダーで登録">
             <ol class={stepsClass}>
               <li>RSSリーダーを開く</li>
               <li>「フィードを追加」を選択</li>
               <li>上記URLを貼り付け</li>
             </ol>
-          </div>
+          </MethodSection>
         </div>
       </div>
     );
