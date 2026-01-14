@@ -38,6 +38,7 @@ pnpm deploy
 
 - Prefer constants over string literals (e.g., use `ATTENDEE_TYPE.SPEAKER` instead of `"SPEAKER"`)
 - Keep comments consistent throughout the codebase. Do not add parenthetical notes as afterthoughts.
+- Do not use barrel pattern (index.ts re-exporting from multiple files). Import directly from individual files.
 
 ## Testing Guidelines
 

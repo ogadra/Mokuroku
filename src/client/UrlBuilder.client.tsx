@@ -32,6 +32,11 @@ import {
   methodContentClass,
   methodTitleClass,
 } from "./UrlBuilder.styles";
+import { AppleIcon } from "./icons/AppleIcon";
+import { GoogleIcon } from "./icons/GoogleIcon";
+import { RssIcon } from "./icons/RssIcon";
+import { ChevronLeftIcon } from "./icons/ChevronLeftIcon";
+import { ChevronRightIcon } from "./icons/ChevronRightIcon";
 
 const FORMAT = {
   ICAL: "ical",
@@ -124,9 +129,7 @@ const UrlBuilderApp = () => {
               <span class={methodTitleClass}>ワンクリックで追加</span>
               <div class={methodContentClass}>
                 <a class={`${feedBtnClass} ${appleBtnClass}`} href={webcalUrl}>
-                  <svg width="16" height="16" viewBox="0 0 384 512" fill="currentColor">
-                    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
-                  </svg>
+                  <AppleIcon />
                   Apple Calendar
                 </a>
                 <a
@@ -135,9 +138,7 @@ const UrlBuilderApp = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <svg width="16" height="16" viewBox="0 0 488 512" fill="currentColor">
-                    <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-                  </svg>
+                  <GoogleIcon />
                   Google Calendar
                 </a>
               </div>
@@ -174,10 +175,7 @@ const UrlBuilderApp = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="6.18" cy="17.82" r="2.18" />
-                  <path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z" />
-                </svg>
+                <RssIcon />
                 RSSフィードを開く
               </a>
             </div>
@@ -287,18 +285,7 @@ const UrlBuilderApp = () => {
             aria-label="iCalに切り替え"
             style={{ left: "-1rem" }}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
+            <ChevronLeftIcon />
           </button>
           <button
             class={`${swipeArrowClass} ${isRss ? swipeArrowHiddenClass : ""}`}
@@ -306,18 +293,7 @@ const UrlBuilderApp = () => {
             aria-label="RSSに切り替え"
             style={{ right: "-1rem" }}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
+            <ChevronRightIcon />
           </button>
           <div class={slidingOverflowClass}>
             <div
