@@ -13,6 +13,7 @@ export const globalStyles = css`
       --color-border: #e2e8f0;
       --color-code-bg: #2d3748;
       --color-code-text: #e2e8f0;
+      --color-code-comment: #68d391;
     }
   
     * {
