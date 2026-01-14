@@ -1,9 +1,37 @@
 /** @jsxImportSource hono/jsx/dom */
-import { useState } from "hono/jsx";
+import { useState, useRef } from "hono/jsx";
 import { render } from "hono/jsx/dom";
-import { css, Style } from "hono/css";
-import { ATTENDEE_TYPE, type AttendeeType } from "../repository/enums/attendeeType";
-import { EVENT_STATUS, type EventStatusType } from "../repository/enums/eventStatus";
+import { Style } from "hono/css";
+import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
+import { EVENT_STATUS } from "../repository/enums/eventStatus";
+import {
+  tabsClass,
+  tabClass,
+  tabActiveClass,
+  urlCopyClass,
+  inputClass,
+  copyBtnClass,
+  stepsClass,
+  swipeContainerClass,
+  slidingWrapperClass,
+  slidingOverflowClass,
+  slidingContainerClass,
+  panelClass,
+  swipeArrowClass,
+  swipeArrowHiddenClass,
+  feedBtnClass,
+  rssBtnClass,
+  appleBtnClass,
+  googleBtnClass,
+  methodsClass,
+} from "./UrlBuilder.styles";
+import { RadioGroup } from "./components/RadioGroup";
+import { MethodSection } from "./components/MethodSection";
+import { AppleIcon } from "./icons/AppleIcon";
+import { GoogleIcon } from "./icons/GoogleIcon";
+import { RssIcon } from "./icons/RssIcon";
+import { ChevronLeftIcon } from "./icons/ChevronLeftIcon";
+import { ChevronRightIcon } from "./icons/ChevronRightIcon";
 
 const FORMAT = {
   ICAL: "ical",
@@ -11,205 +39,210 @@ const FORMAT = {
 } as const;
 
 type Format = (typeof FORMAT)[keyof typeof FORMAT];
-type Role = "all" | Lowercase<AttendeeType>;
-type Status = "all" | Lowercase<EventStatusType>;
 
-const fieldsetClass = css`
-  border: none;
-  margin-bottom: 1rem;
-`;
+const ROLE = {
+  ALL: "all",
+  SPEAKER: ATTENDEE_TYPE.SPEAKER.toLowerCase(),
+  ATTENDEE: ATTENDEE_TYPE.ATTENDEE.toLowerCase(),
+} as const;
 
-const legendClass = css`
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-`;
+type Role = (typeof ROLE)[keyof typeof ROLE];
 
-const radioGroupClass = css`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-`;
+const STATUS = {
+  ALL: "all",
+  CONFIRMED: EVENT_STATUS.CONFIRMED.toLowerCase(),
+  TENTATIVE: EVENT_STATUS.TENTATIVE.toLowerCase(),
+} as const;
 
-const labelClass = css`
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  cursor: pointer;
-  color: var(--color-text-muted);
-`;
+type Status = (typeof STATUS)[keyof typeof STATUS];
 
-const urlCopyClass = css`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--color-code-bg);
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  
-  @media (max-width: 640px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-`;
-
-const inputClass = css`
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--color-code-text);
-  font-family: monospace;
-  font-size: 0.875rem;
-  outline: none;
-  
-  @media (max-width: 640px) {
-    margin-bottom: 0.5rem;
-  }
-`;
-
-const copyBtnClass = css`
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  transition: background 0.2s;
-  
-  &:hover {
-    background: var(--color-primary-dark);
-  }
-`;
+const SWIPE_THRESHOLD = 50;
 
 const UrlBuilderApp = () => {
   const [format, setFormat] = useState<Format>(FORMAT.ICAL);
-  const [role, setRole] = useState<Role>("all");
-  const [status, setStatus] = useState<Status>("all");
+  const [role, setRole] = useState<Role>(ROLE.ALL);
+  const [status, setStatus] = useState<Status>(STATUS.ALL);
   const [copied, setCopied] = useState(false);
+  const touchStartX = useRef<number>(0);
 
-  const buildUrl = (): string => {
+  const handleTouchStart = (e: TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = (touchStartX.current ?? 0) - touchEndX;
+
+    if (Math.abs(diff) > SWIPE_THRESHOLD) {
+      if (diff > 0) {
+        setFormat(FORMAT.RSS);
+      } else {
+        setFormat(FORMAT.ICAL);
+      }
+    }
+  };
+
+  const buildUrl = (targetFormat: Format = format): string => {
     const base = window.location.origin;
-    const path = format === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
+    const path = targetFormat === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
     const params = new URLSearchParams();
-    if (role !== "all") params.set("role", role);
-    if (status !== "all") params.set("status", status);
+    if (role !== ROLE.ALL) params.set("role", role);
+    if (status !== STATUS.ALL) params.set("status", status);
     return params.toString() ? `${base}${path}?${params}` : `${base}${path}`;
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(buildUrl()).then(() => {
+  const copyToClipboard = (url: string) => {
+    navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
+  const isIcal = format === FORMAT.ICAL;
+  const isRss = format === FORMAT.RSS;
+
+  const renderInfoPanel = (panelFormat: Format) => {
+    const url = buildUrl(panelFormat);
+    const parsedUrl = new URL(url);
+
+    if (panelFormat === FORMAT.ICAL) {
+      const webcalUrl = `webcal://${parsedUrl.host}${parsedUrl.pathname}${parsedUrl.search}`;
+      const googleUrl = `https://www.google.com/calendar/render?cid=${encodeURIComponent(webcalUrl)}`;
+
+      return (
+        <div class={panelClass}>
+          <div class={urlCopyClass}>
+            <input type="text" class={inputClass} value={url} readonly />
+            <button class={copyBtnClass} onClick={() => copyToClipboard(url)}>
+              {copied ? "Copied!" : "Copy"}
+            </button>
+          </div>
+
+          <div class={methodsClass}>
+            <MethodSection title="ワンクリックで追加">
+              <a class={`${feedBtnClass} ${appleBtnClass}`} href={webcalUrl}>
+                <AppleIcon />
+                Apple Calendar
+              </a>
+              <a
+                class={`${feedBtnClass} ${googleBtnClass}`}
+                href={googleUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <GoogleIcon />
+                Google Calendar
+              </a>
+            </MethodSection>
+            <MethodSection title="URLで登録">
+              <ol class={stepsClass}>
+                <li>カレンダーアプリを開く</li>
+                <li>「URLでカレンダーを追加」を選択</li>
+                <li>上記URLを貼り付け</li>
+              </ol>
+            </MethodSection>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div class={panelClass}>
+        <div class={urlCopyClass}>
+          <input type="text" class={inputClass} value={url} readonly />
+          <button class={copyBtnClass} onClick={() => copyToClipboard(url)}>
+            {copied ? "Copied!" : "Copy"}
+          </button>
+        </div>
+
+        <div class={methodsClass}>
+          <MethodSection title="ブラウザで開く">
+            <a
+              class={`${feedBtnClass} ${rssBtnClass}`}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <RssIcon />
+              RSSフィードを開く
+            </a>
+          </MethodSection>
+          <MethodSection title="RSSリーダーで登録">
+            <ol class={stepsClass}>
+              <li>RSSリーダーを開く</li>
+              <li>「フィードを追加」を選択</li>
+              <li>上記URLを貼り付け</li>
+            </ol>
+          </MethodSection>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <Style />
-      <fieldset class={fieldsetClass}>
-        <legend class={legendClass}>フィード形式</legend>
-        <div class={radioGroupClass}>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="format"
-              value={FORMAT.ICAL}
-              checked={format === FORMAT.ICAL}
-              onChange={() => setFormat(FORMAT.ICAL)}
-            />
+      <div class={swipeContainerClass} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <div class={tabsClass}>
+          <button class={isIcal ? tabActiveClass : tabClass} onClick={() => setFormat(FORMAT.ICAL)}>
             iCal
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="format"
-              value={FORMAT.RSS}
-              checked={format === FORMAT.RSS}
-              onChange={() => setFormat(FORMAT.RSS)}
-            />
+          </button>
+          <button class={isRss ? tabActiveClass : tabClass} onClick={() => setFormat(FORMAT.RSS)}>
             RSS
-          </label>
+          </button>
         </div>
-      </fieldset>
 
-      <fieldset class={fieldsetClass}>
-        <legend class={legendClass}>参加種別</legend>
-        <div class={radioGroupClass}>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="role"
-              value="all"
-              checked={role === "all"}
-              onChange={() => setRole("all")}
-            />
-            すべて
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="role"
-              value="speaker"
-              checked={role === "speaker"}
-              onChange={() => setRole("speaker")}
-            />
-            登壇のみ
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="role"
-              value="attendee"
-              checked={role === "attendee"}
-              onChange={() => setRole("attendee")}
-            />
-            参加のみ
-          </label>
+        <RadioGroup
+          name="role"
+          legend="参加種別"
+          options={[
+            { value: ROLE.ALL, label: "すべて" },
+            { value: ROLE.SPEAKER, label: "登壇のみ" },
+            { value: ROLE.ATTENDEE, label: "参加のみ" },
+          ]}
+          value={role}
+          onChange={(v) => setRole(v as Role)}
+        />
+
+        <RadioGroup
+          name="status"
+          legend="ステータス"
+          options={[
+            { value: STATUS.ALL, label: "すべて" },
+            { value: STATUS.CONFIRMED, label: "確定のみ" },
+            { value: STATUS.TENTATIVE, label: "仮のみ" },
+          ]}
+          value={status}
+          onChange={(v) => setStatus(v as Status)}
+        />
+
+        <div class={slidingWrapperClass}>
+          <button
+            class={`${swipeArrowClass} ${isIcal ? swipeArrowHiddenClass : ""}`}
+            onClick={() => setFormat(FORMAT.ICAL)}
+            aria-label="iCalに切り替え"
+            style={{ left: "-1rem" }}
+          >
+            <ChevronLeftIcon />
+          </button>
+          <button
+            class={`${swipeArrowClass} ${isRss ? swipeArrowHiddenClass : ""}`}
+            onClick={() => setFormat(FORMAT.RSS)}
+            aria-label="RSSに切り替え"
+            style={{ right: "-1rem" }}
+          >
+            <ChevronRightIcon />
+          </button>
+          <div class={slidingOverflowClass}>
+            <div
+              class={slidingContainerClass}
+              style={{ transform: isRss ? "translateX(calc(-50% - 2rem))" : "translateX(0)" }}
+            >
+              {renderInfoPanel(FORMAT.ICAL)}
+              {renderInfoPanel(FORMAT.RSS)}
+            </div>
+          </div>
         </div>
-      </fieldset>
-
-      <fieldset class={fieldsetClass}>
-        <legend class={legendClass}>ステータス</legend>
-        <div class={radioGroupClass}>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="status"
-              value="all"
-              checked={status === "all"}
-              onChange={() => setStatus("all")}
-            />
-            すべて
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="status"
-              value="confirmed"
-              checked={status === "confirmed"}
-              onChange={() => setStatus("confirmed")}
-            />
-            確定のみ
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="status"
-              value="tentative"
-              checked={status === "tentative"}
-              onChange={() => setStatus("tentative")}
-            />
-            仮のみ
-          </label>
-        </div>
-      </fieldset>
-
-      <div class={urlCopyClass}>
-        <input type="text" class={inputClass} value={buildUrl()} readonly />
-        <button class={copyBtnClass} onClick={copyToClipboard}>
-          {copied ? "Copied!" : "Copy"}
-        </button>
       </div>
     </>
   );
