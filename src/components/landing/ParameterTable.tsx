@@ -5,10 +5,11 @@ import { containerClass, cardClass } from "../Layout";
 const noteClass = css`
   margin-top: 1rem;
   padding: 0.75rem 1rem;
-  background: #fef3c7;
+  background: #feebc8;
   border-radius: 6px;
   font-size: 0.875rem;
-  color: #92400e;
+  color: #c05621;
+  border-left: 3px solid #dd6b20;
 `;
 
 const parameters = [
