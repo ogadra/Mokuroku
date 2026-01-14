@@ -3,6 +3,11 @@
   "main": "src/index.ts",
   "compatibility_date": "2025-01-04",
   "routes": [{ "pattern": "mokuroku.ogadra.com", "custom_domain": true }],
+  "workers_dev": true,
+  "assets": {
+    "directory": "./dist/client/",
+    "binding": "ASSETS",
+  },
   "d1_databases": [
     {
       "binding": "DB",
