@@ -2,16 +2,12 @@
 import { useState, useRef } from "hono/jsx";
 import { render } from "hono/jsx/dom";
 import { Style } from "hono/css";
-import type { AttendeeType } from "../repository/enums/attendeeType";
-import type { EventStatusType } from "../repository/enums/eventStatus";
+import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
+import { EVENT_STATUS } from "../repository/enums/eventStatus";
 import {
   tabsClass,
   tabClass,
   tabActiveClass,
-  fieldsetClass,
-  legendClass,
-  radioGroupClass,
-  labelClass,
   urlCopyClass,
   inputClass,
   copyBtnClass,
@@ -32,6 +28,7 @@ import {
   methodContentClass,
   methodTitleClass,
 } from "./UrlBuilder.styles";
+import { RadioGroup } from "./components/RadioGroup";
 import { AppleIcon } from "./icons/AppleIcon";
 import { GoogleIcon } from "./icons/GoogleIcon";
 import { RssIcon } from "./icons/RssIcon";
@@ -44,15 +41,29 @@ const FORMAT = {
 } as const;
 
 type Format = (typeof FORMAT)[keyof typeof FORMAT];
-type Role = "all" | Lowercase<AttendeeType>;
-type Status = "all" | Lowercase<EventStatusType>;
+
+const ROLE = {
+  ALL: "all",
+  SPEAKER: ATTENDEE_TYPE.SPEAKER.toLowerCase(),
+  ATTENDEE: ATTENDEE_TYPE.ATTENDEE.toLowerCase(),
+} as const;
+
+type Role = (typeof ROLE)[keyof typeof ROLE];
+
+const STATUS = {
+  ALL: "all",
+  CONFIRMED: EVENT_STATUS.CONFIRMED.toLowerCase(),
+  TENTATIVE: EVENT_STATUS.TENTATIVE.toLowerCase(),
+} as const;
+
+type Status = (typeof STATUS)[keyof typeof STATUS];
 
 const SWIPE_THRESHOLD = 50;
 
 const UrlBuilderApp = () => {
   const [format, setFormat] = useState<Format>(FORMAT.ICAL);
-  const [role, setRole] = useState<Role>("all");
-  const [status, setStatus] = useState<Status>("all");
+  const [role, setRole] = useState<Role>(ROLE.ALL);
+  const [status, setStatus] = useState<Status>(STATUS.ALL);
   const [copied, setCopied] = useState(false);
   const touchStartX = useRef<number>(0);
 
@@ -77,8 +88,8 @@ const UrlBuilderApp = () => {
     const base = window.location.origin;
     const path = targetFormat === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
     const params = new URLSearchParams();
-    if (role !== "all") params.set("role", role);
-    if (status !== "all") params.set("status", status);
+    if (role !== ROLE.ALL) params.set("role", role);
+    if (status !== STATUS.ALL) params.set("status", status);
     return params.toString() ? `${base}${path}?${params}` : `${base}${path}`;
   };
 
@@ -191,77 +202,29 @@ const UrlBuilderApp = () => {
           </button>
         </div>
 
-        <fieldset class={fieldsetClass}>
-          <legend class={legendClass}>参加種別</legend>
-          <div class={radioGroupClass}>
-            <label class={labelClass}>
-              <input
-                type="radio"
-                name="role"
-                value="all"
-                checked={role === "all"}
-                onChange={() => setRole("all")}
-              />
-              すべて
-            </label>
-            <label class={labelClass}>
-              <input
-                type="radio"
-                name="role"
-                value="speaker"
-                checked={role === "speaker"}
-                onChange={() => setRole("speaker")}
-              />
-              登壇のみ
-            </label>
-            <label class={labelClass}>
-              <input
-                type="radio"
-                name="role"
-                value="attendee"
-                checked={role === "attendee"}
-                onChange={() => setRole("attendee")}
-              />
-              参加のみ
-            </label>
-          </div>
-        </fieldset>
+        <RadioGroup
+          name="role"
+          legend="参加種別"
+          options={[
+            { value: ROLE.ALL, label: "すべて" },
+            { value: ROLE.SPEAKER, label: "登壇のみ" },
+            { value: ROLE.ATTENDEE, label: "参加のみ" },
+          ]}
+          value={role}
+          onChange={(v) => setRole(v as Role)}
+        />
 
-        <fieldset class={fieldsetClass}>
-          <legend class={legendClass}>ステータス</legend>
-          <div class={radioGroupClass}>
-            <label class={labelClass}>
-              <input
-                type="radio"
-                name="status"
-                value="all"
-                checked={status === "all"}
-                onChange={() => setStatus("all")}
-              />
-              すべて
-            </label>
-            <label class={labelClass}>
-              <input
-                type="radio"
-                name="status"
-                value="confirmed"
-                checked={status === "confirmed"}
-                onChange={() => setStatus("confirmed")}
-              />
-              確定のみ
-            </label>
-            <label class={labelClass}>
-              <input
-                type="radio"
-                name="status"
-                value="tentative"
-                checked={status === "tentative"}
-                onChange={() => setStatus("tentative")}
-              />
-              仮のみ
-            </label>
-          </div>
-        </fieldset>
+        <RadioGroup
+          name="status"
+          legend="ステータス"
+          options={[
+            { value: STATUS.ALL, label: "すべて" },
+            { value: STATUS.CONFIRMED, label: "確定のみ" },
+            { value: STATUS.TENTATIVE, label: "仮のみ" },
+          ]}
+          value={status}
+          onChange={(v) => setStatus(v as Status)}
+        />
 
         <div class={slidingWrapperClass}>
           <button
