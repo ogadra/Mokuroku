@@ -8,9 +8,6 @@
     "directory": "./dist/client/",
     "binding": "ASSETS",
   },
-  "vars": {
-    "ENVIRONMENT": "dev",
-  },
   "d1_databases": [
     {
       "binding": "DB",
@@ -19,11 +16,4 @@
       "migrations_dir": "./src/repository/migrations",
     },
   ],
-  "env": {
-    "production": {
-      "vars": {
-        "ENVIRONMENT": "production",
-      },
-    },
-  },
 }
