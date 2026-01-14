@@ -1,3 +1,4 @@
+/** @jsxImportSource hono/jsx/dom */
 import { useState } from "hono/jsx";
 import { render } from "hono/jsx/dom";
 import { css, Style } from "hono/css";
