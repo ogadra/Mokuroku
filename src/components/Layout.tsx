@@ -77,11 +77,13 @@ export const globalStyles = css`
     }
   
     section {
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
     }
   
     section h2 {
-      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0 1rem 0.5rem;
       font-size: 1.25rem;
       font-weight: 600;
     }
