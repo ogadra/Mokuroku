@@ -222,28 +222,48 @@ const swipeArrowHiddenClass = css`
   pointer-events: none;
 `;
 
-const rssBtnClass = css`
+const feedBtnClass = css`
+  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #f97316;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
   transition: background 0.2s;
+`;
+
+const rssBtnClass = css`
+  background: #f97316;
   
   &:hover {
     background: #ea580c;
   }
 `;
 
-const rssMethodsClass = css`
+const appleBtnClass = css`
+  background: #374151;
+  
+  &:hover {
+    background: #1f2937;
+  }
+`;
+
+const googleBtnClass = css`
+  background: #4285f4;
+  
+  &:hover {
+    background: #3367d6;
+  }
+`;
+
+const methodsClass = css`
   display: flex;
   gap: 1.5rem;
   margin-top: 1rem;
@@ -254,20 +274,24 @@ const rssMethodsClass = css`
   }
 `;
 
-const rssMethodClass = css`
+const methodClass = css`
   flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
-const rssMethodContentClass = css`
+const methodContentClass = css`
   flex: 1;
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem;
 `;
 
-const rssMethodTitleClass = css`
+const methodTitleClass = css`
   font-weight: 600;
   color: var(--color-primary);
   background: rgba(59, 130, 246, 0.1);
@@ -336,10 +360,17 @@ const UrlBuilderApp = () => {
   const isRss = format === FORMAT.RSS;
 
   const renderInfoPanel = (panelFormat: Format) => {
-    const info = FEED_INFO[panelFormat];
     const url = buildUrl(panelFormat);
+    const path = panelFormat === FORMAT.ICAL ? "/schedule.ics" : "/feed.xml";
+    const params = new URLSearchParams();
+    if (role !== "all") params.set("role", role);
+    if (status !== "all") params.set("status", status);
+    const queryString = params.toString() ? `?${params}` : "";
 
-    if (panelFormat === FORMAT.RSS) {
+    if (panelFormat === FORMAT.ICAL) {
+      const webcalUrl = `webcal://${window.location.host}${path}${queryString}`;
+      const googleUrl = `https://www.google.com/calendar/render?cid=${encodeURIComponent(webcalUrl)}`;
+
       return (
         <div class={panelClass}>
           <div class={urlCopyClass}>
@@ -349,24 +380,34 @@ const UrlBuilderApp = () => {
             </button>
           </div>
 
-          <div class={rssMethodsClass}>
-            <div class={rssMethodClass}>
-              <span class={rssMethodTitleClass}>ブラウザで開く</span>
-              <div class={rssMethodContentClass}>
-                <a class={rssBtnClass} href={url} target="_blank" rel="noopener noreferrer">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="6.18" cy="17.82" r="2.18" />
-                    <path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z" />
+          <div class={methodsClass}>
+            <div class={methodClass}>
+              <span class={methodTitleClass}>ワンクリックで追加</span>
+              <div class={methodContentClass}>
+                <a class={`${feedBtnClass} ${appleBtnClass}`} href={webcalUrl}>
+                  <svg width="16" height="16" viewBox="0 0 384 512" fill="currentColor">
+                    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
                   </svg>
-                  RSSフィードを開く
+                  Apple Calendar
+                </a>
+                <a
+                  class={`${feedBtnClass} ${googleBtnClass}`}
+                  href={googleUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg width="16" height="16" viewBox="0 0 488 512" fill="currentColor">
+                    <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+                  </svg>
+                  Google Calendar
                 </a>
               </div>
             </div>
-            <div class={rssMethodClass}>
-              <span class={rssMethodTitleClass}>RSSリーダーで登録</span>
+            <div class={methodClass}>
+              <span class={methodTitleClass}>URLで登録</span>
               <ol class={stepsClass}>
-                <li>RSSリーダーを開く</li>
-                <li>「フィードを追加」を選択</li>
+                <li>カレンダーアプリを開く</li>
+                <li>「URLでカレンダーを追加」を選択</li>
                 <li>上記URLを貼り付け</li>
               </ol>
             </div>
@@ -384,12 +425,33 @@ const UrlBuilderApp = () => {
           </button>
         </div>
 
-        <p class={descriptionClass}>{info.description}</p>
-        <ol class={stepsClass}>
-          {info.steps.map((step) => (
-            <li>{step}</li>
-          ))}
-        </ol>
+        <div class={methodsClass}>
+          <div class={methodClass}>
+            <span class={methodTitleClass}>ブラウザで開く</span>
+            <div class={methodContentClass}>
+              <a
+                class={`${feedBtnClass} ${rssBtnClass}`}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="6.18" cy="17.82" r="2.18" />
+                  <path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z" />
+                </svg>
+                RSSフィードを開く
+              </a>
+            </div>
+          </div>
+          <div class={methodClass}>
+            <span class={methodTitleClass}>RSSリーダーで登録</span>
+            <ol class={stepsClass}>
+              <li>RSSリーダーを開く</li>
+              <li>「フィードを追加」を選択</li>
+              <li>上記URLを貼り付け</li>
+            </ol>
+          </div>
+        </div>
       </div>
     );
   };
