@@ -222,6 +222,63 @@ const swipeArrowHiddenClass = css`
   pointer-events: none;
 `;
 
+const rssBtnClass = css`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #f97316;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: #ea580c;
+  }
+`;
+
+const rssMethodsClass = css`
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+`;
+
+const rssMethodClass = css`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const rssMethodContentClass = css`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const rssMethodTitleClass = css`
+  font-weight: 600;
+  color: var(--color-primary);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  text-align: center;
+  border-left: 3px solid var(--color-primary);
+`;
+
 const FEED_INFO = {
   ical: {
     description: "Google Calendar, Apple Calendar, Outlook などのカレンダーアプリに追加",
@@ -281,6 +338,43 @@ const UrlBuilderApp = () => {
   const renderInfoPanel = (panelFormat: Format) => {
     const info = FEED_INFO[panelFormat];
     const url = buildUrl(panelFormat);
+
+    if (panelFormat === FORMAT.RSS) {
+      return (
+        <div class={panelClass}>
+          <div class={urlCopyClass}>
+            <input type="text" class={inputClass} value={url} readonly />
+            <button class={copyBtnClass} onClick={() => copyToClipboard(url)}>
+              {copied ? "Copied!" : "Copy"}
+            </button>
+          </div>
+
+          <div class={rssMethodsClass}>
+            <div class={rssMethodClass}>
+              <span class={rssMethodTitleClass}>ブラウザで開く</span>
+              <div class={rssMethodContentClass}>
+                <a class={rssBtnClass} href={url} target="_blank" rel="noopener noreferrer">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="6.18" cy="17.82" r="2.18" />
+                    <path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z" />
+                  </svg>
+                  RSSフィードを開く
+                </a>
+              </div>
+            </div>
+            <div class={rssMethodClass}>
+              <span class={rssMethodTitleClass}>RSSリーダーで登録</span>
+              <ol class={stepsClass}>
+                <li>RSSリーダーを開く</li>
+                <li>「フィードを追加」を選択</li>
+                <li>上記URLを貼り付け</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div class={panelClass}>
         <div class={urlCopyClass}>
