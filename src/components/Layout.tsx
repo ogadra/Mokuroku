@@ -4,14 +4,14 @@ import { Style, css } from "hono/css";
 export const globalStyles = css`
   :-hono-global {
     :root {
-      --color-primary: #3b82f6;
-      --color-primary-dark: #2563eb;
-      --color-bg: #f8fafc;
+      --color-primary: #3182ce;
+      --color-primary-dark: #2b6cb0;
+      --color-bg: #f7fafc;
       --color-card: #ffffff;
-      --color-text: #1e293b;
-      --color-text-muted: #64748b;
+      --color-text: #1a202c;
+      --color-text-muted: #718096;
       --color-border: #e2e8f0;
-      --color-code-bg: #1e293b;
+      --color-code-bg: #2d3748;
       --color-code-text: #e2e8f0;
     }
   
@@ -22,19 +22,26 @@ export const globalStyles = css`
     }
   
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
       background: var(--color-bg);
       color: var(--color-text);
-      line-height: 1.6;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
   
     pre,
     code {
-      font-family: "SF Mono", Monaco, "Cascadia Code", monospace;
+      font-family: "JetBrains Mono", "SF Mono", Monaco, Consolas, monospace;
     }
   
     code {
-      background: var(--color-bg);
+      background: var(--color-border);
       padding: 0.125rem 0.375rem;
       border-radius: 4px;
       font-size: 0.875em;
@@ -55,6 +62,14 @@ export const globalStyles = css`
     th {
       background: var(--color-bg);
       font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  
+    tr:hover td {
+      background: rgba(49, 130, 206, 0.04);
     }
   
     main {
@@ -68,6 +83,7 @@ export const globalStyles = css`
     section h2 {
       margin-bottom: 1rem;
       font-size: 1.25rem;
+      font-weight: 600;
     }
   
     @media (max-width: 640px) {
@@ -77,7 +93,7 @@ export const globalStyles = css`
   
       th,
       td {
-        padding: 0.5rem;
+        padding: 0.5rem 0.75rem;
       }
     }
   }
@@ -91,8 +107,10 @@ export const containerClass = css`
 
 export const cardClass = css`
   background: var(--color-card);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.06);
   padding: 1.5rem;
 `;
 

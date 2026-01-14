@@ -13,15 +13,21 @@ export const tabClass = css`
   background: transparent;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 500;
   color: var(--color-text-muted);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   transition:
-    color 0.2s,
-    border-color 0.2s;
+    color 0.15s,
+    border-color 0.15s;
   
   &:hover {
     color: var(--color-text);
+  }
+  
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
   }
 `;
 
@@ -32,10 +38,10 @@ export const tabActiveClass = css`
   background: transparent;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 500;
   margin-bottom: -1px;
   color: var(--color-primary);
   border-bottom: 2px solid var(--color-primary);
-  box-shadow: 0 4px 6px -4px rgba(59, 130, 246, 0.5);
 `;
 
 export const fieldsetClass = css`
@@ -69,10 +75,11 @@ export const labelClass = css`
   border-radius: 6px;
   cursor: pointer;
   color: var(--color-text-muted);
-  background: var(--color-bg);
-  transition: all 0.2s;
+  background: var(--color-card);
+  transition: all 0.15s;
   white-space: nowrap;
   font-size: 0.875rem;
+  font-weight: 500;
   
   @media (min-width: 400px) {
     padding: 0.5rem 1rem;
@@ -92,6 +99,10 @@ export const labelClass = css`
     background: var(--color-primary);
     border-color: var(--color-primary);
     color: white;
+  }
+  
+  &:has(input:focus-visible) {
+    box-shadow: 0 0 0 2px var(--color-primary);
   }
 `;
 
@@ -128,13 +139,19 @@ export const copyBtnClass = css`
   color: white;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.875rem;
-  transition: background 0.2s;
+  font-weight: 500;
+  transition: background 0.15s;
   
   &:hover {
     background: var(--color-primary-dark);
+  }
+  
+  &:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
   }
 `;
 
@@ -211,35 +228,41 @@ export const feedBtnClass = css`
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
-  transition: background 0.2s;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+  
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 export const rssBtnClass = css`
-  background: #f97316;
+  background: #dd6b20;
   
   &:hover {
-    background: #ea580c;
+    background: #c05621;
   }
 `;
 
 export const appleBtnClass = css`
-  background: #374151;
+  background: #2d3748;
   
   &:hover {
-    background: #1f2937;
+    background: #1a202c;
   }
 `;
 
 export const googleBtnClass = css`
-  background: #4285f4;
+  background: #3182ce;
   
   &:hover {
-    background: #3367d6;
+    background: #2b6cb0;
   }
 `;
 
@@ -274,11 +297,11 @@ export const methodContentClass = css`
 export const methodTitleClass = css`
   font-weight: 600;
   color: var(--color-primary);
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(49, 130, 206, 0.08);
   padding: 0.5rem 1rem;
   border-radius: 6px;
   margin-bottom: 0.75rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   text-align: center;
   border-left: 3px solid var(--color-primary);
 `;
