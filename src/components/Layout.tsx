@@ -105,7 +105,11 @@ export const codeBlockClass = css`
   font-size: 0.875rem;
 `;
 
-export const Layout: FC<PropsWithChildren> = ({ children }) => {
+type LayoutProps = PropsWithChildren<{
+  baseUrl: string;
+}>;
+
+export const Layout: FC<LayoutProps> = ({ children, baseUrl }) => {
   return (
     <html lang="ja">
       <head>
@@ -116,7 +120,7 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
           name="description"
           content="ogadraの登壇予定・イベント情報。iCal または RSS で購読できます。"
         />
-        <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href={`${baseUrl}/feed.xml`} />
         <Style />
       </head>
       <body class={globalStyles}>{children}</body>

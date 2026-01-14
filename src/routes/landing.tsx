@@ -9,8 +9,10 @@ import { ExamplesSection } from "../components/landing/ExamplesSection";
 const landingRoutes = new Hono<AppEnv>();
 
 landingRoutes.get("/", (c) => {
+  const url = new URL(c.req.url);
+  const baseUrl = url.origin;
   return c.html(
-    <Layout>
+    <Layout baseUrl={baseUrl}>
       <HeroSection />
       <main>
         <UrlBuilder />
