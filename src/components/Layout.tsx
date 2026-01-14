@@ -1,6 +1,5 @@
 import type { FC, PropsWithChildren } from "hono/jsx";
 import { Style, css } from "hono/css";
-import { raw } from "hono/html";
 
 export const globalStyles = css`
   :-hono-global {
@@ -97,16 +96,6 @@ export const cardClass = css`
   padding: 1.5rem;
 `;
 
-export const cardGridClass = css`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
 export const codeBlockClass = css`
   background: var(--color-code-bg);
   color: var(--color-code-text);
@@ -116,64 +105,11 @@ export const codeBlockClass = css`
   font-size: 0.875rem;
 `;
 
-export const urlCopyClass = css`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--color-code-bg);
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  
-  input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--color-code-text);
-    font-family: monospace;
-    font-size: 0.875rem;
-    outline: none;
-  }
-  
-  @media (max-width: 640px) {
-    flex-direction: column;
-    align-items: stretch;
-  
-    input {
-      margin-bottom: 0.5rem;
-    }
-  }
-`;
+type LayoutProps = PropsWithChildren<{
+  baseUrl: string;
+}>;
 
-export const copyBtnClass = css`
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  transition: background 0.2s;
-  
-  &:hover {
-    background: var(--color-primary-dark);
-  }
-`;
-
-const copyScript = `
-function copyToClipboard(inputId, buttonId) {
-  const input = document.getElementById(inputId);
-  const button = document.getElementById(buttonId);
-  navigator.clipboard.writeText(input.value).then(() => {
-    const originalText = button.textContent;
-    button.textContent = 'Copied!';
-    setTimeout(() => {
-      button.textContent = originalText;
-    }, 2000);
-  });
-}
-`;
-
-export const Layout: FC<PropsWithChildren> = ({ children }) => {
+export const Layout: FC<LayoutProps> = ({ children, baseUrl }) => {
   return (
     <html lang="ja">
       <head>
@@ -184,13 +120,10 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
           name="description"
           content="ogadraの登壇予定・イベント情報。iCal または RSS で購読できます。"
         />
-        <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href={`${baseUrl}/feed.xml`} />
         <Style />
       </head>
-      <body class={globalStyles}>
-        {children}
-        <script>{raw(copyScript)}</script>
-      </body>
+      <body class={globalStyles}>{children}</body>
     </html>
   );
 };
