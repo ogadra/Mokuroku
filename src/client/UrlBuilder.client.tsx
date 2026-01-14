@@ -47,17 +47,6 @@ type Format = (typeof FORMAT)[keyof typeof FORMAT];
 type Role = "all" | Lowercase<AttendeeType>;
 type Status = "all" | Lowercase<EventStatusType>;
 
-const FEED_INFO = {
-  ical: {
-    description: "Google Calendar, Apple Calendar, Outlook などのカレンダーアプリに追加",
-    steps: ["カレンダーアプリを開く", "「URLでカレンダーを追加」を選択", "上記URLを貼り付け"],
-  },
-  rss: {
-    description: "Feedly, Inoreader などのRSSリーダーで購読",
-    steps: ["RSSリーダーを開く", "「フィードを追加」を選択", "上記URLを貼り付け"],
-  },
-};
-
 const SWIPE_THRESHOLD = 50;
 
 const UrlBuilderApp = () => {

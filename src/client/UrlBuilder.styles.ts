@@ -138,12 +138,6 @@ export const copyBtnClass = css`
   }
 `;
 
-export const descriptionClass = css`
-  color: var(--color-text-muted);
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-`;
-
 export const stepsClass = css`
   margin: 1rem 0 0 1.25rem;
   color: var(--color-text-muted);
