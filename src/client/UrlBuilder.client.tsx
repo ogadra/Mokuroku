@@ -6,6 +6,41 @@ type Format = "ical" | "rss";
 type Role = "all" | "speaker" | "attendee";
 type Status = "all" | "confirmed" | "tentative";
 
+const tabsClass = css`
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1.5rem;
+`;
+
+const tabClass = css`
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+  
+  &:hover {
+    color: var(--color-text);
+  }
+`;
+
+const tabActiveClass = css`
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: -1px;
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+`;
+
 const fieldsetClass = css`
   border: none;
   margin-bottom: 1rem;
@@ -128,31 +163,20 @@ const UrlBuilderApp = () => {
   return (
     <>
       <Style />
-      <fieldset class={fieldsetClass}>
-        <legend class={legendClass}>フィード形式</legend>
-        <div class={radioGroupClass}>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="format"
-              value="ical"
-              checked={format === "ical"}
-              onChange={() => setFormat("ical")}
-            />
-            iCal
-          </label>
-          <label class={labelClass}>
-            <input
-              type="radio"
-              name="format"
-              value="rss"
-              checked={format === "rss"}
-              onChange={() => setFormat("rss")}
-            />
-            RSS
-          </label>
-        </div>
-      </fieldset>
+      <div class={tabsClass}>
+        <button
+          class={format === "ical" ? tabActiveClass : tabClass}
+          onClick={() => setFormat("ical")}
+        >
+          iCal
+        </button>
+        <button
+          class={format === "rss" ? tabActiveClass : tabClass}
+          onClick={() => setFormat("rss")}
+        >
+          RSS
+        </button>
+      </div>
 
       <fieldset class={fieldsetClass}>
         <legend class={legendClass}>参加種別</legend>
