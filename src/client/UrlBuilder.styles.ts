@@ -71,10 +71,10 @@ export const labelClass = css`
   align-items: center;
   justify-content: center;
   padding: 0.5rem 0.5rem;
-  border: 1px solid var(--color-border);
+  border: 2px solid #cbd5e0;
   border-radius: 6px;
   cursor: pointer;
-  color: var(--color-text-muted);
+  color: var(--color-text);
   background: var(--color-card);
   transition: all 0.15s;
   white-space: nowrap;
@@ -89,6 +89,7 @@ export const labelClass = css`
   &:hover {
     border-color: var(--color-primary);
     color: var(--color-primary);
+    background: rgba(49, 130, 206, 0.04);
   }
   
   input {
