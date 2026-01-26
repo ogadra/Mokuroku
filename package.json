@@ -11,6 +11,7 @@
     "dev": "vite",
     "build": "vite build",
     "deploy": "pnpm build && wrangler deploy",
+    "deploy:stg": "CLOUDFLARE_ENV=stg pnpm build && wrangler deploy --env stg",
     "deploy:preview": "pnpm build && wrangler versions upload",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
