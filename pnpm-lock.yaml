@@ -15,15 +15,15 @@ importers:
         specifier: ^0.45.1
         version: 0.45.1(@cloudflare/workers-types@4.20260103.0)(@libsql/client@0.17.0)
       hono:
-        specifier: ^4.11.3
-        version: 4.11.3
+        specifier: ^4.11.4
+        version: 4.11.4
       valibot:
         specifier: ^1.2.0
         version: 1.2.0
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: ^1.20.3
-        version: 1.20.3(vite@7.3.1(@types/node@25.0.6))(workerd@1.20260107.1)(wrangler@4.60.0(@cloudflare/workers-types@4.20260103.0))
+        version: 1.20.3(vite@7.3.1(@types/node@25.0.6))(workerd@1.20260120.0)(wrangler@4.60.0(@cloudflare/workers-types@4.20260103.0))
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.12.1
         version: 0.12.1(@cloudflare/workers-types@4.20260103.0)(@vitest/runner@4.0.17)(@vitest/snapshot@4.0.17)(vitest@3.2.4(@types/node@25.0.6))
@@ -35,7 +35,7 @@ importers:
         version: 0.1.8
       '@hono/vite-dev-server':
         specifier: ^0.24.0
-        version: 0.24.0(hono@4.11.3)(miniflare@4.20260120.0)(wrangler@4.60.0(@cloudflare/workers-types@4.20260103.0))
+        version: 0.24.0(hono@4.11.4)(miniflare@4.20260120.0)(wrangler@4.60.0(@cloudflare/workers-types@4.20260103.0))
       '@libsql/client':
         specifier: ^0.17.0
         version: 0.17.0
@@ -1550,8 +1550,8 @@ packages:
   glob-to-regexp@0.4.1:
     resolution: {integrity: sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==}
 
-  hono@4.11.3:
-    resolution: {integrity: sha512-PmQi306+M/ct/m5s66Hrg+adPnkD5jiO6IjA7WhWw0gSBSo1EcRegwuI1deZ+wd5pzCGynCcn2DprnE4/yEV4w==}
+  hono@4.11.4:
+    resolution: {integrity: sha512-U7tt8JsyrxSRKspfhtLET79pU8K+tInj5QZXs1jSugO1Vq5dFj3kmZsRldo29mTBfcjDRVRXrEZ6LS63Cog9ZA==}
     engines: {node: '>=16.9.0'}
 
   is-arrayish@0.3.4:
@@ -1934,15 +1934,15 @@ snapshots:
     optionalDependencies:
       workerd: 1.20260107.1
 
-  '@cloudflare/unenv-preset@2.9.0(unenv@2.0.0-rc.24)(workerd@1.20260107.1)':
+  '@cloudflare/unenv-preset@2.9.0(unenv@2.0.0-rc.24)(workerd@1.20260120.0)':
     dependencies:
       unenv: 2.0.0-rc.24
     optionalDependencies:
-      workerd: 1.20260107.1
+      workerd: 1.20260120.0
 
-  '@cloudflare/vite-plugin@1.20.3(vite@7.3.1(@types/node@25.0.6))(workerd@1.20260107.1)(wrangler@4.60.0(@cloudflare/workers-types@4.20260103.0))':
+  '@cloudflare/vite-plugin@1.20.3(vite@7.3.1(@types/node@25.0.6))(workerd@1.20260120.0)(wrangler@4.60.0(@cloudflare/workers-types@4.20260103.0))':
     dependencies:
-      '@cloudflare/unenv-preset': 2.9.0(unenv@2.0.0-rc.24)(workerd@1.20260107.1)
+      '@cloudflare/unenv-preset': 2.9.0(unenv@2.0.0-rc.24)(workerd@1.20260120.0)
       '@remix-run/node-fetch-server': 0.8.1
       defu: 6.1.4
       get-port: 7.1.0
@@ -2269,19 +2269,19 @@ snapshots:
 
   '@hono/cli@0.1.8':
     dependencies:
-      '@hono/node-server': 1.19.9(hono@4.11.3)
+      '@hono/node-server': 1.19.9(hono@4.11.4)
       commander: 14.0.2
       esbuild: 0.25.12
-      hono: 4.11.3
+      hono: 4.11.4
 
-  '@hono/node-server@1.19.9(hono@4.11.3)':
+  '@hono/node-server@1.19.9(hono@4.11.4)':
     dependencies:
-      hono: 4.11.3
+      hono: 4.11.4
 
-  '@hono/vite-dev-server@0.24.0(hono@4.11.3)(miniflare@4.20260120.0)(wrangler@4.60.0(@cloudflare/workers-types@4.20260103.0))':
+  '@hono/vite-dev-server@0.24.0(hono@4.11.4)(miniflare@4.20260120.0)(wrangler@4.60.0(@cloudflare/workers-types@4.20260103.0))':
     dependencies:
-      '@hono/node-server': 1.19.9(hono@4.11.3)
-      hono: 4.11.3
+      '@hono/node-server': 1.19.9(hono@4.11.4)
+      hono: 4.11.4
       minimatch: 9.0.5
     optionalDependencies:
       miniflare: 4.20260120.0
@@ -2981,7 +2981,7 @@ snapshots:
 
   glob-to-regexp@0.4.1: {}
 
-  hono@4.11.3: {}
+  hono@4.11.4: {}
 
   is-arrayish@0.3.4: {}
 
