@@ -25,7 +25,10 @@ export const events = sqliteTable("events", {
   summary: text("summary").notNull(),
 
   /** @description Detailed description (RFC5545 DESCRIPTION) */
-  description: text("description").notNull(),
+  description: text("description"),
+
+  /** @description  Uniform Resource Locator (RFC5545 URL) */
+  url: text("url"),
 
   /** @description Venue or address (RFC5545 LOCATION) */
   location: text("location").notNull(),
