@@ -51,10 +51,10 @@ iCalendar形式でイベント一覧を取得します。
 
 #### Query Parameters
 
-| パラメータ | 説明 | 値 |
-|-----------|------|-----|
-| `role` | 参加種別でフィルタ | `speaker`, `attendee` |
-| `status` | ステータスでフィルタ | `confirmed`, `tentative`, `cancelled` |
+| パラメータ | 説明                 | 値                                    |
+| ---------- | -------------------- | ------------------------------------- |
+| `role`     | 参加種別でフィルタ   | `speaker`, `attendee`                 |
+| `status`   | ステータスでフィルタ | `confirmed`, `tentative`, `cancelled` |
 
 #### 備考
 
@@ -76,10 +76,10 @@ RSS 2.0形式でイベント一覧を取得します。
 
 #### Query Parameters
 
-| パラメータ | 説明 | 値 |
-|-----------|------|-----|
-| `role` | 参加種別でフィルタ | `speaker`, `attendee` |
-| `status` | ステータスでフィルタ | `confirmed`, `tentative`, `cancelled` |
+| パラメータ | 説明                 | 値                                    |
+| ---------- | -------------------- | ------------------------------------- |
+| `role`     | 参加種別でフィルタ   | `speaker`, `attendee`                 |
+| `status`   | ステータスでフィルタ | `confirmed`, `tentative`, `cancelled` |
 
 #### 備考
 
@@ -101,10 +101,10 @@ GET /feed.xml?role=speaker&status=confirmed
 
 #### Query Parameters
 
-| パラメータ | 説明 | 値 |
-|-----------|------|-----|
-| `role` | 参加種別でフィルタ | `speaker`, `attendee` |
-| `status` | ステータスでフィルタ | `confirmed`, `tentative`, `cancelled` |
+| パラメータ | 説明                 | 値                                    |
+| ---------- | -------------------- | ------------------------------------- |
+| `role`     | 参加種別でフィルタ   | `speaker`, `attendee`                 |
+| `status`   | ステータスでフィルタ | `confirmed`, `tentative`, `cancelled` |
 
 #### Response
 
@@ -156,16 +156,16 @@ curl -X POST https://your-worker.dev/event \
 
 #### Request Body
 
-| フィールド | 型 | 必須 | 説明 |
-|-----------|-----|------|------|
-| `dtstart` | ISO8601 | Yes | 開始日時（タイムゾーン必須: `2026-01-01T10:00:00+09:00` または `2026-01-01T01:00:00Z`） |
-| `dtend` | ISO8601 | Yes | 終了日時（タイムゾーン必須: `2026-01-01T12:00:00+09:00` または `2026-01-01T03:00:00Z`） |
-| `summary` | string | Yes | タイトル |
-| `description` | string | Yes | 説明 |
-| `location` | string | Yes | 場所 |
-| `status` | string | Yes | `CONFIRMED`, `TENTATIVE`, `CANCELLED` |
-| `attendeeType` | string | Yes | `SPEAKER`, `ATTENDEE` |
-| `class` | string | No | `PUBLIC`, `PRIVATE`, `CONFIDENTIAL` (default: `PUBLIC`) |
+| フィールド     | 型      | 必須 | 説明                                                                                    |
+| -------------- | ------- | ---- | --------------------------------------------------------------------------------------- |
+| `dtstart`      | ISO8601 | Yes  | 開始日時（タイムゾーン必須: `2026-01-01T10:00:00+09:00` または `2026-01-01T01:00:00Z`） |
+| `dtend`        | ISO8601 | Yes  | 終了日時（タイムゾーン必須: `2026-01-01T12:00:00+09:00` または `2026-01-01T03:00:00Z`） |
+| `summary`      | string  | Yes  | タイトル                                                                                |
+| `description`  | string  | Yes  | 説明                                                                                    |
+| `location`     | string  | Yes  | 場所                                                                                    |
+| `status`       | string  | Yes  | `CONFIRMED`, `TENTATIVE`, `CANCELLED`                                                   |
+| `attendeeType` | string  | Yes  | `SPEAKER`, `ATTENDEE`                                                                   |
+| `class`        | string  | No   | `PUBLIC`, `PRIVATE`, `CONFIDENTIAL` (default: `PUBLIC`)                                 |
 
 ### PUT /event/:uid
 
