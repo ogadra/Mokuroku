@@ -8,6 +8,9 @@ export const CONNPASS_API_BASE = "https://connpass.com/api/v2";
 /** @description connpass nickname whose events are synced */
 export const CONNPASS_NICKNAME = "ogadra";
 
+/** @description User-Agent sent to connpass; requests with an empty User-Agent are rejected with 403 */
+export const CONNPASS_USER_AGENT = "Mokuroku/1.0 (+https://mokuroku.ogadra.com)";
+
 /** @description Number of events fetched per page (connpass API maximum) */
 const PAGE_SIZE = 100;
 
@@ -114,7 +117,7 @@ const requestEvents = async (
     params.set("count", String(PAGE_SIZE));
 
     const response = await fetch(`${CONNPASS_API_BASE}${path}?${params.toString()}`, {
-      headers: { "X-API-Key": apiKey },
+      headers: { "X-API-Key": apiKey, "User-Agent": CONNPASS_USER_AGENT },
     });
     if (!response.ok) {
       throw new Error(`connpass API request failed: ${response.status} ${response.statusText}`);

@@ -1,11 +1,11 @@
 import { env, fetchMock } from "cloudflare:test";
 import { drizzle } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
-import { beforeAll, afterEach, describe, it, expect } from "vitest";
+import { beforeAll, afterEach, describe, it, expect, vi } from "vitest";
 import { syncConnpassEvents } from "./connpassSync";
 import { events } from "../repository/schema";
 import type { ConnpassEvent } from "../utils/connpass";
-import { CONNPASS_OPEN_STATUS } from "../utils/connpass";
+import { CONNPASS_OPEN_STATUS, CONNPASS_USER_AGENT } from "../utils/connpass";
 import { EVENT_STATUS } from "../repository/enums/eventStatus";
 import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
 
@@ -24,16 +24,23 @@ const buildEvent = (overrides: Partial<ConnpassEvent> & { id: number }): Connpas
 
 const mockConnpass = (participated: ConnpassEvent[], presenter: ConnpassEvent[]) => {
   const pool = fetchMock.get("https://connpass.com");
-  pool.intercept({ path: (p) => p.startsWith("/api/v2/events/"), method: "GET" }).reply(200, {
-    events: participated,
-    results_returned: participated.length,
-    results_available: participated.length,
-    results_start: 1,
-  });
+  pool
+    .intercept({
+      path: (p) => p.startsWith("/api/v2/events/"),
+      method: "GET",
+      headers: { "User-Agent": CONNPASS_USER_AGENT },
+    })
+    .reply(200, {
+      events: participated,
+      results_returned: participated.length,
+      results_available: participated.length,
+      results_start: 1,
+    });
   pool
     .intercept({
       path: (p) => p.startsWith("/api/v2/users/ogadra/presenter_events/"),
       method: "GET",
+      headers: { "User-Agent": CONNPASS_USER_AGENT },
     })
     .reply(200, {
       events: presenter,
@@ -45,6 +52,8 @@ const mockConnpass = (participated: ConnpassEvent[], presenter: ConnpassEvent[])
 
 describe("syncConnpassEvents", () => {
   beforeAll(() => {
+    // syncConnpassEvents awaits a real timer; the global fake timers would otherwise block it
+    vi.useRealTimers();
     fetchMock.activate();
     fetchMock.disableNetConnect();
   });
