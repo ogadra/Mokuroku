@@ -80,6 +80,13 @@ describe("formatLocation", () => {
   it("両方が空文字なら空文字を返すこと", () => {
     expect(formatLocation("", ""), "両方空なら空文字であること").toBe("");
   });
+
+  it("nullを無視して埋まっている方だけを返すこと", () => {
+    expect(formatLocation("オンライン", null), "addressがnullなら会場のみ返すこと").toBe(
+      "オンライン",
+    );
+    expect(formatLocation(null, null), "両方nullなら空文字であること").toBe("");
+  });
 });
 
 describe("toNewEvent", () => {

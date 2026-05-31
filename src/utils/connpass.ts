@@ -37,8 +37,8 @@ export interface ConnpassEvent {
   url: string;
   started_at: string;
   ended_at: string;
-  place: string;
-  address: string;
+  place: string | null;
+  address: string | null;
   open_status: ConnpassOpenStatus;
 }
 
@@ -80,9 +80,9 @@ export const determineAttendeeType = (
 };
 
 /** Join venue and address into a single location string. */
-export const formatLocation = (place: string, address: string): string => {
+export const formatLocation = (place: string | null, address: string | null): string => {
   return [place, address]
-    .map((part) => part.trim())
+    .map((part) => part?.trim() ?? "")
     .filter((part) => part.length > 0)
     .join(" ");
 };
