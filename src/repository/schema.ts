@@ -52,6 +52,9 @@ export const events = sqliteTable("events", {
     .$type<AttendeeType>()
     .notNull(),
 
+  /** @description connpass event id for synced events, null for manually created events (non-RFC5545 extension) */
+  connpassEventId: integer("connpass_event_id").unique(),
+
   /** @description Timestamp when the event was created (RFC5545 CREATED) */
   created: integer("created", { mode: "timestamp" })
     .notNull()
