@@ -15,8 +15,8 @@ importers:
         specifier: ^0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260103.0)(@libsql/client@0.17.0)
       hono:
-        specifier: ^4.11.10
-        version: 4.11.10
+        specifier: ^4.13.11
+        version: 4.13.11
       valibot:
         specifier: ^1.2.0
         version: 1.2.0
@@ -35,7 +35,7 @@ importers:
         version: 0.1.8
       '@hono/vite-dev-server':
         specifier: ^0.24.0
-        version: 0.24.0(hono@4.11.10)(miniflare@4.20260120.0)(wrangler@4.156.1(@cloudflare/workers-types@4.20260103.0)(@types/node@25.0.6))
+        version: 0.24.0(hono@4.13.11)(miniflare@4.20260120.0)(wrangler@4.156.1(@cloudflare/workers-types@4.20260103.0)(@types/node@25.0.6))
       '@libsql/client':
         specifier: ^0.17.0
         version: 0.17.0
@@ -1469,8 +1469,8 @@ packages:
   get-tsconfig@4.13.0:
     resolution: {integrity: sha512-1VKTZJCwBrvbd+Wn3AOgQP/2Av+TfTCOlE4AcRJE72W1ksZXbAx8PPBR9RzgTeSPzlPMHrbANMH3LbltH73wxQ==}
 
-  hono@4.11.10:
-    resolution: {integrity: sha512-kyWP5PAiMooEvGrA9jcD3IXF7ATu8+o7B3KCbPXid5se52NPqnOpM/r9qeW2heMnOekF4kqR1fXJqCYeCLKrZg==}
+  hono@4.13.11:
+    resolution: {integrity: sha512-/SMX/RQNJn7oNmFwH6DtwDqcrzZU2otm1FD6OJe2cWF6cfy/F8hq0XVBv7xW3FTJshRQwuBnXHDq2kNsdZnshg==}
     engines: {node: '>=16.9.0'}
 
   js-base64@3.7.8:
@@ -2126,19 +2126,19 @@ snapshots:
 
   '@hono/cli@0.1.8':
     dependencies:
-      '@hono/node-server': 1.19.9(hono@4.11.10)
+      '@hono/node-server': 1.19.9(hono@4.13.11)
       commander: 14.0.2
       esbuild: 0.25.12
-      hono: 4.11.10
+      hono: 4.13.11
 
-  '@hono/node-server@1.19.9(hono@4.11.10)':
+  '@hono/node-server@1.19.9(hono@4.13.11)':
     dependencies:
-      hono: 4.11.10
+      hono: 4.13.11
 
-  '@hono/vite-dev-server@0.24.0(hono@4.11.10)(miniflare@4.20260120.0)(wrangler@4.156.1(@cloudflare/workers-types@4.20260103.0)(@types/node@25.0.6))':
+  '@hono/vite-dev-server@0.24.0(hono@4.13.11)(miniflare@4.20260120.0)(wrangler@4.156.1(@cloudflare/workers-types@4.20260103.0)(@types/node@25.0.6))':
     dependencies:
-      '@hono/node-server': 1.19.9(hono@4.11.10)
-      hono: 4.11.10
+      '@hono/node-server': 1.19.9(hono@4.13.11)
+      hono: 4.13.11
       minimatch: 9.0.5
     optionalDependencies:
       miniflare: 4.20260120.0
@@ -2804,7 +2804,7 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  hono@4.11.10: {}
+  hono@4.13.11: {}
 
   js-base64@3.7.8: {}
 
