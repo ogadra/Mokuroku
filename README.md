@@ -182,7 +182,7 @@ curl -X POST https://your-worker.dev/event \
 
 Cloudflare Workers の Cron Triggers（1時間ごと）で connpass API v2 から自分の参加予定イベントを取得し、`events` テーブルへ自動同期します。
 
-- 同期対象は当月から2か月先までの参加イベントです
+- 同期対象は、開催日の新しい順に取得した100件のうち、まだ始まっていない参加イベントです
 - connpass の `event_id` をキーに upsert します（新規は INSERT、既存は タイトル・日時・場所・status・参加種別 を更新）
 - 発表者として登壇したイベント（`/users/{nickname}/presenter_events/`）に含まれるものを `SPEAKER`、それ以外を `ATTENDEE` と判定します
   - 未来のイベントは connpass 側で発表者として確定するまで `ATTENDEE` 扱いになる場合があります（その後の同期で `SPEAKER` に更新されます）
