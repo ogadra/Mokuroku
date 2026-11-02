@@ -12,6 +12,7 @@
     "build": "vite build",
     "deploy": "pnpm build && wrangler deploy",
     "deploy:preview": "pnpm build && wrangler versions upload",
+    "deploy:stg": "CLOUDFLARE_ENV=stg pnpm build && wrangler deploy",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "typecheck": "tsgo --noEmit",
@@ -19,6 +20,7 @@
     "typegen": "wrangler types",
     "generate": "drizzle-kit generate",
     "migrate": "wrangler d1 migrations apply mokuroku --local",
+    "migrate:stg": "wrangler d1 migrations apply mokuroku-preview --remote --env stg",
     "migrate:prd": "wrangler d1 migrations apply mokuroku --remote",
     "db:studio": "npx cross-env LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio"
   },
