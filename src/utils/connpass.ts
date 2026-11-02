@@ -17,8 +17,8 @@ const PAGE_SIZE = 100;
 /** @description Safety cap on total fetched events to avoid runaway pagination */
 const MAX_EVENTS = 1000;
 
-/** @description Sort order for the events endpoint: 2 means by event date ascending */
-const ORDER_BY_STARTED_AT = 2;
+/** @description Sort order for the events endpoint: 2 means by event date descending */
+const ORDER_BY_STARTED_AT_DESC = 2;
 
 /**
  * connpass event open status
@@ -51,21 +51,6 @@ interface ConnpassEventsResponse {
   results_available: number;
   results_start: number;
 }
-
-/**
- * Build the list of `ym` (YYYYMM) values from the given month through `monthsAhead` later.
- * Used to limit the events endpoint to upcoming events only.
- */
-export const upcomingYms = (now: Date, monthsAhead: number): number[] => {
-  const year = now.getUTCFullYear();
-  const month = now.getUTCMonth();
-  const yms: number[] = [];
-  for (let i = 0; i <= monthsAhead; i++) {
-    const date = new Date(Date.UTC(year, month + i, 1));
-    yms.push(date.getUTCFullYear() * 100 + (date.getUTCMonth() + 1));
-  }
-  return yms;
-};
 
 /** Map a connpass open status to an internal event status. */
 export const mapOpenStatusToStatus = (openStatus: ConnpassOpenStatus): EventStatusType => {
@@ -108,11 +93,12 @@ const requestEvents = async (
   apiKey: string,
   path: string,
   params: URLSearchParams,
+  maxEvents: number = MAX_EVENTS,
 ): Promise<ConnpassEvent[]> => {
   const all: ConnpassEvent[] = [];
   let start = 1;
 
-  while (all.length < MAX_EVENTS) {
+  while (all.length < maxEvents) {
     params.set("start", String(start));
     params.set("count", String(PAGE_SIZE));
 
@@ -135,18 +121,22 @@ const requestEvents = async (
   return all;
 };
 
-/** Fetch events the configured user participates in within the given months. */
+/**
+ * Fetch events the configured user participates in that start at or after `now`.
+ *
+ * The events endpoint can only filter by `ym`/`ymd`, so listing months would cap how far ahead
+ * events are found. Only the first page in descending event date is read instead: paging on to
+ * reach the past was not done because more than one page of upcoming events is not expected.
+ */
 export const fetchParticipatedEvents = async (
   apiKey: string,
-  yms: number[],
+  now: Date,
 ): Promise<ConnpassEvent[]> => {
   const params = new URLSearchParams();
   params.set("nickname", CONNPASS_NICKNAME);
-  params.set("order", String(ORDER_BY_STARTED_AT));
-  for (const ym of yms) {
-    params.append("ym", String(ym));
-  }
-  return requestEvents(apiKey, "/events/", params);
+  params.set("order", String(ORDER_BY_STARTED_AT_DESC));
+  const events = await requestEvents(apiKey, "/events/", params, PAGE_SIZE);
+  return events.filter((event) => new Date(event.started_at) >= now);
 };
 
 /** Fetch the set of event ids the configured user presented at. */

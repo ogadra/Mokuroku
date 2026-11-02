@@ -6,24 +6,9 @@ import {
   formatLocation,
   mapOpenStatusToStatus,
   toNewEvent,
-  upcomingYms,
 } from "./connpass";
 import { EVENT_STATUS } from "../repository/enums/eventStatus";
 import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
-
-describe("upcomingYms", () => {
-  it("当月から指定した月数先までのYYYYMM配列を返すこと", () => {
-    const result = upcomingYms(new Date("2026-01-15T00:00:00.000Z"), 2);
-    expect(result, "当月と向こう2か月のym配列であること").toStrictEqual([202601, 202602, 202603]);
-  });
-
-  it("年をまたぐ場合に翌年のYYYYMMへ繰り上がること", () => {
-    const result = upcomingYms(new Date("2026-12-01T00:00:00.000Z"), 2);
-    expect(result, "12月起点で翌年1月・2月へ繰り上がること").toStrictEqual([
-      202612, 202701, 202702,
-    ]);
-  });
-});
 
 describe("mapOpenStatusToStatus", () => {
   it("cancelledはCANCELLEDになること", () => {

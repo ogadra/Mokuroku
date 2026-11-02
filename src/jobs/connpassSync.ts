@@ -10,14 +10,10 @@ import {
   fetchParticipatedEvents,
   fetchPresenterEventIds,
   toNewEvent,
-  upcomingYms,
 } from "../utils/connpass";
 import { sleep } from "../utils/sleep";
 
 type Database = DrizzleD1Database<typeof schema>;
-
-/** @description Number of months ahead of the current month to sync */
-const MONTHS_AHEAD = 2;
 
 /** @description Interval between connpass requests; the API allows at most 1 request per second */
 const REQUEST_INTERVAL_MS = 1500;
@@ -34,9 +30,8 @@ export const syncConnpassEvents = async (
   apiKey: string,
   now: Date,
 ): Promise<void> => {
-  const yms = upcomingYms(now, MONTHS_AHEAD);
   // connpass allows at most 1 request per second, so fetch sequentially with a gap between calls
-  const participatedEvents = await fetchParticipatedEvents(apiKey, yms);
+  const participatedEvents = await fetchParticipatedEvents(apiKey, now);
   await sleep(REQUEST_INTERVAL_MS);
   const presenterEventIds = await fetchPresenterEventIds(apiKey);
 
