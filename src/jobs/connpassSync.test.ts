@@ -1,11 +1,11 @@
-import { env, fetchMock } from "cloudflare:test";
+import { env } from "cloudflare:test";
 import { drizzle } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
 import { beforeAll, afterEach, describe, it, expect, vi } from "vitest";
 import { syncConnpassEvents } from "./connpassSync";
 import { events } from "../repository/schema";
 import type { ConnpassEvent } from "../utils/connpass";
-import { CONNPASS_OPEN_STATUS, CONNPASS_USER_AGENT } from "../utils/connpass";
+import { CONNPASS_API_BASE, CONNPASS_OPEN_STATUS, CONNPASS_USER_AGENT } from "../utils/connpass";
 import { EVENT_STATUS } from "../repository/enums/eventStatus";
 import { ATTENDEE_TYPE } from "../repository/enums/attendeeType";
 
@@ -22,44 +22,48 @@ const buildEvent = (overrides: Partial<ConnpassEvent> & { id: number }): Connpas
   ...overrides,
 });
 
+interface MockInterceptor {
+  pathPrefix: string;
+  events: ConnpassEvent[];
+}
+
+let pendingInterceptors: MockInterceptor[] = [];
+
 const mockConnpass = (participated: ConnpassEvent[], presenter: ConnpassEvent[]) => {
-  const pool = fetchMock.get("https://connpass.com");
-  pool
-    .intercept({
-      path: (p) => p.startsWith("/api/v2/events/"),
-      method: "GET",
-      headers: { "User-Agent": CONNPASS_USER_AGENT },
-    })
-    .reply(200, {
-      events: participated,
-      results_returned: participated.length,
-      results_available: participated.length,
+  pendingInterceptors = [
+    { pathPrefix: `${CONNPASS_API_BASE}/events/`, events: participated },
+    { pathPrefix: `${CONNPASS_API_BASE}/users/ogadra/presenter_events/`, events: presenter },
+  ];
+  vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+    const request = new Request(input, init);
+    const interceptor = pendingInterceptors.find(
+      (i) =>
+        request.method === "GET" &&
+        request.url.startsWith(i.pathPrefix) &&
+        request.headers.get("User-Agent") === CONNPASS_USER_AGENT,
+    );
+    if (!interceptor) {
+      throw new Error(`Unexpected request: ${request.method} ${request.url}`);
+    }
+    pendingInterceptors = pendingInterceptors.filter((i) => i !== interceptor);
+    return Response.json({
+      events: interceptor.events,
+      results_returned: interceptor.events.length,
+      results_available: interceptor.events.length,
       results_start: 1,
     });
-  pool
-    .intercept({
-      path: (p) => p.startsWith("/api/v2/users/ogadra/presenter_events/"),
-      method: "GET",
-      headers: { "User-Agent": CONNPASS_USER_AGENT },
-    })
-    .reply(200, {
-      events: presenter,
-      results_returned: presenter.length,
-      results_available: presenter.length,
-      results_start: 1,
-    });
+  });
 };
 
 describe("syncConnpassEvents", () => {
   beforeAll(() => {
     // syncConnpassEvents awaits a real timer; the global fake timers would otherwise block it
     vi.useRealTimers();
-    fetchMock.activate();
-    fetchMock.disableNetConnect();
   });
 
   afterEach(() => {
-    fetchMock.assertNoPendingInterceptors();
+    expect(pendingInterceptors.length, "モックしたリクエストがすべて呼ばれていること").toBe(0);
+    vi.restoreAllMocks();
   });
 
   it("新規イベントをINSERTし、presenter集合の有無でattendeeTypeを決めること", async () => {
