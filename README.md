@@ -184,7 +184,7 @@ curl -X POST https://your-worker.dev/event \
 
 ## connpass同期
 
-Cron Triggersで1時間ごとにconnpass API v2から自分の参加イベントを取得し、`events` テーブルへ同期する。
+Cron Triggersで4時間ごとにconnpass API v2から自分の参加イベントを取得し、`events` テーブルへ同期する。
 
 - 同期対象は、開催日の新しい順に取得した100件のうち、まだ始まっていない参加イベントだ
 - connpassの `event_id` をキーにupsertする
