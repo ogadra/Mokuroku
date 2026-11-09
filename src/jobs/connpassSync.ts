@@ -15,11 +15,7 @@ import { sleep } from "../utils/sleep";
 
 type Database = DrizzleD1Database<typeof schema>;
 
-/**
- * @description Interval between connpass requests.
- * The documented limit of 1 request per second is not enough: connpass returned 429 for requests
- * 10 seconds apart and accepted them 13 seconds apart, so the gap keeps a margin over that.
- */
+/** @description Interval between connpass requests; connpass returned 429 for requests 10 seconds apart */
 const REQUEST_INTERVAL_MS = 20_000;
 
 /**
