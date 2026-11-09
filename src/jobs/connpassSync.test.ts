@@ -1,7 +1,7 @@
 import { env } from "cloudflare:test";
 import { drizzle } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
-import { beforeAll, afterEach, describe, it, expect, vi } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import { syncConnpassEvents } from "./connpassSync";
 import { events } from "../repository/schema";
 import type { ConnpassEvent } from "../utils/connpass";
@@ -55,12 +55,17 @@ const mockConnpass = (participated: ConnpassEvent[], presenter: ConnpassEvent[])
   });
 };
 
-describe("syncConnpassEvents", () => {
-  beforeAll(() => {
-    // syncConnpassEvents awaits a real timer; the global fake timers would otherwise block it
-    vi.useRealTimers();
-  });
+// The wait between connpass requests is a fake timer, so it is advanced once the first request has scheduled it
+const runSync = async (db: Parameters<typeof syncConnpassEvents>[0]) => {
+  const sync = syncConnpassEvents(db, "dummy-token", NOW);
+  await vi.waitFor(() =>
+    expect(vi.getTimerCount(), "リクエスト間の待機が予約されていること").toBe(1),
+  );
+  await vi.runOnlyPendingTimersAsync();
+  await sync;
+};
 
+describe("syncConnpassEvents", () => {
   afterEach(() => {
     expect(pendingInterceptors.length, "モックしたリクエストがすべて呼ばれていること").toBe(0);
     vi.restoreAllMocks();
@@ -72,7 +77,7 @@ describe("syncConnpassEvents", () => {
     const speaking = buildEvent({ id: 222, title: "My Talk" });
     mockConnpass([attendeeOnly, speaking], [speaking]);
 
-    await syncConnpassEvents(db, "dummy-token", NOW);
+    await runSync(db);
 
     const inserted = await db.select().from(events).where(eq(events.connpassEventId, 111));
     expect(inserted.length, "id111が1件INSERTされていること").toBe(1);
@@ -110,7 +115,7 @@ describe("syncConnpassEvents", () => {
     const updated = buildEvent({ id: 111, title: "New Title", place: "New Venue", address: "" });
     mockConnpass([updated], []);
 
-    await syncConnpassEvents(db, "dummy-token", NOW);
+    await runSync(db);
 
     const rows = await db.select().from(events).where(eq(events.connpassEventId, 111));
     expect(rows.length, "id111が重複せず1件のままであること").toBe(1);
@@ -151,7 +156,7 @@ describe("syncConnpassEvents", () => {
 
     mockConnpass([], []);
 
-    await syncConnpassEvents(db, "dummy-token", NOW);
+    await runSync(db);
 
     const futureGone = await db.select().from(events).where(eq(events.uid, "synced-future-gone"));
     expect(futureGone[0].status, "消えた未来の同期イベントはCANCELLEDになること").toBe(
