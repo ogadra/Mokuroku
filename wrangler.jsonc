@@ -19,4 +19,17 @@
       "migrations_dir": "./src/repository/migrations",
     },
   ],
+  "env": {
+    "stg": {
+      "routes": [],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "mokuroku-stg",
+          "database_id": "310139bb-f917-4401-a32b-805431ad651a",
+          "migrations_dir": "./src/repository/migrations",
+        },
+      ],
+    },
+  },
 }
