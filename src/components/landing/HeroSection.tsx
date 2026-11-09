@@ -1,32 +1,40 @@
 import type { FC } from "hono/jsx";
 import { css } from "hono/css";
+import { containerClass } from "../Layout";
 
 const heroClass = css`
-  text-align: center;
-  padding: 4rem 1rem;
-  background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
-  color: white;
-  margin-bottom: 2rem;
+  padding: 4.5rem 0 3rem;
   
   h1 {
-    font-size: 2.5rem;
+    font-size: clamp(3.25rem, 10vw, 5.5rem);
     font-weight: 700;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
   }
   
   p {
+    margin-top: 0.75rem;
     font-size: 1.125rem;
-    opacity: 0.9;
-    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+  
+  @media (max-width: 640px) {
+    padding: 3rem 0 2rem;
+  
+    p {
+      font-size: 1rem;
+    }
   }
 `;
 
 export const HeroSection: FC = () => {
   return (
     <header class={heroClass}>
-      <h1>Mokuroku</h1>
-      <p>ogadraの登壇予定・イベント情報</p>
+      <div class={containerClass}>
+        <h1>Mokuroku</h1>
+        <p>ogadraの登壇予定・イベント情報</p>
+      </div>
     </header>
   );
 };

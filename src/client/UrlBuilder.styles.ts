@@ -2,20 +2,21 @@ import { css } from "hono/css";
 
 export const tabsClass = css`
   display: flex;
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-primary);
+  margin-bottom: 1.75rem;
 `;
 
 export const tabClass = css`
   flex: 1;
-  padding: 0.75rem 1.5rem;
+  padding: 0.625rem 1.5rem;
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 700;
   color: var(--color-text-muted);
-  border-bottom: 2px solid transparent;
+  border-bottom: 3px solid transparent;
   margin-bottom: -1px;
   transition:
     color 0.15s,
@@ -23,6 +24,7 @@ export const tabClass = css`
   
   &:hover {
     color: var(--color-text);
+    border-bottom-color: var(--color-border);
   }
   
   &:focus-visible {
@@ -33,36 +35,41 @@ export const tabClass = css`
 
 export const tabActiveClass = css`
   flex: 1;
-  padding: 0.75rem 1.5rem;
+  padding: 0.625rem 1.5rem;
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 700;
   margin-bottom: -1px;
-  color: var(--color-primary);
-  border-bottom: 2px solid var(--color-primary);
+  color: var(--color-text);
+  border-bottom: 3px solid var(--color-primary);
+  
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+  }
 `;
 
 export const fieldsetClass = css`
   border: none;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 `;
 
 export const legendClass = css`
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 700;
   margin-bottom: 0.5rem;
-  color: var(--color-text);
+  color: var(--color-text-muted);
 `;
 
 export const radioGroupClass = css`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  
-  @media (min-width: 400px) {
-    gap: 1rem;
-  }
+  border: 1px solid var(--color-primary);
+  border-radius: 2px;
+  overflow: hidden;
 `;
 
 export const labelClass = css`
@@ -71,98 +78,111 @@ export const labelClass = css`
   align-items: center;
   justify-content: center;
   padding: 0.5rem 0.5rem;
-  border: 2px solid #cbd5e0;
-  border-radius: 6px;
   cursor: pointer;
   color: var(--color-text);
   background: var(--color-card);
-  transition: all 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   white-space: nowrap;
   font-size: 0.875rem;
   font-weight: 500;
   
+  & + & {
+    border-left: 1px solid var(--color-primary);
+  }
+  
   @media (min-width: 400px) {
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: 0.9375rem;
   }
   
   &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background: rgba(49, 130, 206, 0.04);
+    background: var(--color-primary-tint);
   }
   
   input {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
   }
   
   &:has(input:checked) {
     background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
+    color: var(--color-on-dark);
+    font-weight: 700;
   }
   
   &:has(input:focus-visible) {
-    box-shadow: 0 0 0 2px var(--color-primary);
+    outline: 2px solid var(--color-accent);
+    outline-offset: -4px;
   }
 `;
 
 export const urlCopyClass = css`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   background: var(--color-code-bg);
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
+  padding: 0.625rem 0.625rem 0.625rem 1rem;
+  border-radius: 2px;
   
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: stretch;
+    padding: 0.75rem;
   }
 `;
 
 export const inputClass = css`
   flex: 1;
+  min-width: 0;
   background: transparent;
   border: none;
-  color: var(--color-code-text);
-  font-family: monospace;
+  color: var(--color-on-dark);
+  font-family: var(--font-code);
   font-size: 0.875rem;
   outline: none;
   
   @media (max-width: 640px) {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 `;
 
 export const copyBtnClass = css`
-  background: var(--color-primary);
-  color: white;
+  background: var(--color-card);
+  color: var(--color-text);
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2px;
   cursor: pointer;
+  font-family: var(--font-sans);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 700;
   transition: background 0.15s;
   
   &:hover {
-    background: var(--color-primary-dark);
+    background: var(--color-card-hover);
   }
   
   &:focus-visible {
-    outline: 2px solid white;
+    outline: 2px solid var(--color-card);
     outline-offset: 2px;
   }
 `;
 
 export const stepsClass = css`
-  margin: 1rem 0 0 1.25rem;
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
+  margin: 0 0 0 1.25rem;
+  color: var(--color-text);
+  font-size: 0.9375rem;
   
   li {
     margin-bottom: 0.25rem;
+  }
+  
+  li::marker {
+    font-weight: 700;
+    color: var(--color-text);
   }
 `;
 
@@ -173,6 +193,7 @@ export const swipeContainerClass = css`
 
 export const slidingWrapperClass = css`
   position: relative;
+  margin-top: 0.5rem;
 `;
 
 export const slidingOverflowClass = css`
@@ -198,20 +219,27 @@ export const swipeArrowClass = css`
   transform: translateY(-50%);
   width: 2rem;
   height: 2rem;
-  border: none;
-  background: var(--color-bg);
+  border: 1px solid var(--color-primary);
+  background: var(--color-card);
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-muted);
-  transition: all 0.2s;
+  color: var(--color-text);
+  transition:
+    background 0.15s,
+    color 0.15s,
+    opacity 0.2s;
   z-index: 10;
   
+  @media (max-width: 640px) {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  
   &:hover {
-    color: var(--color-primary);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    background: var(--color-primary);
+    color: var(--color-on-dark);
   }
 `;
 
@@ -221,88 +249,96 @@ export const swipeArrowHiddenClass = css`
 `;
 
 export const feedBtnClass = css`
-  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  color: white;
+  color: var(--color-on-dark);
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+  padding: calc(0.75rem + 1px) 1rem calc(0.75rem - 1px);
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  white-space: nowrap;
   text-decoration: none;
-  transition:
-    background 0.15s,
-    transform 0.1s;
+  transition: background 0.15s;
   
-  &:active {
-    transform: scale(0.98);
+  @media (max-width: 640px) {
+    padding: calc(0.75rem + 1px) 0.5rem calc(0.75rem - 1px);
+    font-size: 0.875rem;
   }
 `;
 
 export const rssBtnClass = css`
-  background: #dd6b20;
+  background: var(--color-accent);
   
   &:hover {
-    background: #c05621;
+    background: var(--color-accent-dark);
   }
 `;
 
 export const appleBtnClass = css`
-  background: #2d3748;
+  background: var(--color-text-strong);
   
   &:hover {
-    background: #1a202c;
+    background: var(--color-text);
   }
 `;
 
 export const googleBtnClass = css`
-  background: #3182ce;
+  background: var(--color-primary);
   
   &:hover {
-    background: #2b6cb0;
+    background: var(--color-primary-dark);
   }
 `;
 
 export const methodsClass = css`
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
   
   @media (max-width: 640px) {
-    flex-direction: column;
-    gap: 1rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 `;
 
 export const methodClass = css`
-  flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
 export const methodContentClass = css`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 0.5rem;
-  margin: 0.5rem;
 `;
 
 export const methodTitleClass = css`
-  font-weight: 600;
-  color: var(--color-primary);
-  background: rgba(49, 130, 206, 0.08);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  margin-bottom: 0.75rem;
-  font-size: 0.875rem;
-  text-align: center;
-  border-left: 3px solid var(--color-primary);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text);
+  padding-bottom: 0.375rem;
+  margin-bottom: 0.875rem;
+  border-bottom: 1px dotted var(--color-rule);
+`;
+
+export const swipeArrowPrevClass = css`
+  left: -1.75rem;
+  
+  @media (max-width: 640px) {
+    left: -1.875rem;
+  }
+`;
+
+export const swipeArrowNextClass = css`
+  right: -1.75rem;
+  
+  @media (max-width: 640px) {
+    right: -1.875rem;
+  }
 `;

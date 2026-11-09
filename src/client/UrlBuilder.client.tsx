@@ -19,6 +19,8 @@ import {
   panelClass,
   swipeArrowClass,
   swipeArrowHiddenClass,
+  swipeArrowPrevClass,
+  swipeArrowNextClass,
   feedBtnClass,
   rssBtnClass,
   appleBtnClass,
@@ -218,18 +220,16 @@ const UrlBuilderApp = () => {
 
         <div class={slidingWrapperClass}>
           <button
-            class={`${swipeArrowClass} ${isIcal ? swipeArrowHiddenClass : ""}`}
+            class={`${swipeArrowClass} ${swipeArrowPrevClass} ${isIcal ? swipeArrowHiddenClass : ""}`}
             onClick={() => setFormat(FORMAT.ICAL)}
             aria-label="iCalに切り替え"
-            style={{ left: "-1rem" }}
           >
             <ChevronLeftIcon />
           </button>
           <button
-            class={`${swipeArrowClass} ${isRss ? swipeArrowHiddenClass : ""}`}
+            class={`${swipeArrowClass} ${swipeArrowNextClass} ${isRss ? swipeArrowHiddenClass : ""}`}
             onClick={() => setFormat(FORMAT.RSS)}
             aria-label="RSSに切り替え"
-            style={{ right: "-1rem" }}
           >
             <ChevronRightIcon />
           </button>
