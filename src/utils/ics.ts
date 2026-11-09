@@ -1,4 +1,4 @@
-import type { Event } from "../repository/types/events";
+import type { PublicEvent } from "../repository/types/events";
 import { buildEventTitle } from "./eventPrefix";
 
 export function formatDateUTC(date: Date): string {
@@ -11,7 +11,7 @@ export function formatDateUTC(date: Date): string {
   return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
 }
 
-export function generateICS(eventList: Event[], addRolePrefix?: boolean): string {
+export function generateICS(eventList: PublicEvent[], addRolePrefix?: boolean): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
