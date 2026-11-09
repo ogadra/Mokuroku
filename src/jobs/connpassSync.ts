@@ -15,7 +15,7 @@ import { sleep } from "../utils/sleep";
 
 type Database = DrizzleD1Database<typeof schema>;
 
-/** @description Interval between connpass requests; connpass returned 429 for requests 10 seconds apart */
+/** @description Interval between connpass requests, longer than the 10 seconds at which connpass returned 429 */
 const REQUEST_INTERVAL_MS = 20_000;
 
 /**
