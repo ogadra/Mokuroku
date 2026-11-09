@@ -12,10 +12,9 @@ export const tabClass = css`
   border: none;
   background: transparent;
   cursor: pointer;
-  font-family: var(--font-mincho);
+  font-family: var(--font-sans);
   font-size: 1.125rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   color: var(--color-text-muted);
   border-bottom: 3px solid transparent;
   margin-bottom: -1px;
@@ -24,7 +23,7 @@ export const tabClass = css`
     border-color 0.15s;
   
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-text);
     border-bottom-color: var(--color-border);
   }
   
@@ -40,12 +39,11 @@ export const tabActiveClass = css`
   border: none;
   background: transparent;
   cursor: pointer;
-  font-family: var(--font-mincho);
+  font-family: var(--font-sans);
   font-size: 1.125rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   margin-bottom: -1px;
-  color: var(--color-primary);
+  color: var(--color-text);
   border-bottom: 3px solid var(--color-primary);
   
   &:focus-visible {
@@ -81,7 +79,7 @@ export const labelClass = css`
   justify-content: center;
   padding: 0.5rem 0.5rem;
   cursor: pointer;
-  color: var(--color-primary);
+  color: var(--color-text);
   background: var(--color-card);
   transition:
     background 0.15s,
@@ -111,12 +109,12 @@ export const labelClass = css`
   
   &:has(input:checked) {
     background: var(--color-primary);
-    color: var(--color-card);
+    color: var(--color-on-dark);
     font-weight: 700;
   }
   
   &:has(input:focus-visible) {
-    outline: 2px solid var(--color-seal);
+    outline: 2px solid var(--color-accent);
     outline-offset: -4px;
   }
 `;
@@ -141,7 +139,7 @@ export const inputClass = css`
   min-width: 0;
   background: transparent;
   border: none;
-  color: var(--color-code-text);
+  color: var(--color-on-dark);
   font-family: var(--font-code);
   font-size: 0.875rem;
   outline: none;
@@ -153,18 +151,18 @@ export const inputClass = css`
 
 export const copyBtnClass = css`
   background: var(--color-card);
-  color: var(--color-primary);
+  color: var(--color-text);
   border: none;
   padding: 0.5rem 1.25rem;
   border-radius: 2px;
   cursor: pointer;
-  font-family: var(--font-gothic);
+  font-family: var(--font-sans);
   font-size: 0.875rem;
   font-weight: 700;
   transition: background 0.15s;
   
   &:hover {
-    background: #e6e3d8;
+    background: var(--color-card-hover);
   }
   
   &:focus-visible {
@@ -183,9 +181,8 @@ export const stepsClass = css`
   }
   
   li::marker {
-    font-family: var(--font-mincho);
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text);
   }
 `;
 
@@ -228,16 +225,21 @@ export const swipeArrowClass = css`
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
+  color: var(--color-text);
   transition:
     background 0.15s,
     color 0.15s,
     opacity 0.2s;
   z-index: 10;
   
+  @media (max-width: 640px) {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  
   &:hover {
     background: var(--color-primary);
-    color: var(--color-card);
+    color: var(--color-on-dark);
   }
 `;
 
@@ -251,30 +253,36 @@ export const feedBtnClass = css`
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  color: white;
+  color: var(--color-on-dark);
   border: none;
-  padding: 0.75rem 1.25rem;
+  padding: calc(0.75rem + 1px) 1rem calc(0.75rem - 1px);
   border-radius: 2px;
   cursor: pointer;
   font-size: 0.9375rem;
   font-weight: 700;
+  white-space: nowrap;
   text-decoration: none;
   transition: background 0.15s;
+  
+  @media (max-width: 640px) {
+    padding: calc(0.75rem + 1px) 0.5rem calc(0.75rem - 1px);
+    font-size: 0.875rem;
+  }
 `;
 
 export const rssBtnClass = css`
-  background: var(--color-seal);
+  background: var(--color-accent);
   
   &:hover {
-    background: var(--color-seal-dark);
+    background: var(--color-accent-dark);
   }
 `;
 
 export const appleBtnClass = css`
-  background: var(--color-text);
+  background: var(--color-text-strong);
   
   &:hover {
-    background: #000000;
+    background: var(--color-text);
   }
 `;
 
@@ -304,20 +312,33 @@ export const methodClass = css`
 `;
 
 export const methodContentClass = css`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 0.5rem;
 `;
 
 export const methodTitleClass = css`
-  font-family: var(--font-mincho);
   font-weight: 700;
   font-size: 1rem;
-  letter-spacing: 0.04em;
-  color: var(--color-primary);
+  color: var(--color-text);
   padding-bottom: 0.375rem;
   margin-bottom: 0.875rem;
   border-bottom: 1px dotted var(--color-rule);
+`;
+
+export const swipeArrowPrevClass = css`
+  left: -1.75rem;
+  
+  @media (max-width: 640px) {
+    left: -1.875rem;
+  }
+`;
+
+export const swipeArrowNextClass = css`
+  right: -1.75rem;
+  
+  @media (max-width: 640px) {
+    right: -1.875rem;
+  }
 `;

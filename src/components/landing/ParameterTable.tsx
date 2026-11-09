@@ -5,15 +5,15 @@ import { containerClass, cardClass } from "../Layout";
 const noteClass = css`
   margin-top: 1.25rem;
   padding: 0.75rem 1rem;
-  background: rgba(180, 65, 46, 0.06);
-  border: 1px solid rgba(180, 65, 46, 0.35);
+  background: var(--color-accent-tint);
+  border: 1px solid var(--color-accent-border);
   border-radius: 2px;
   font-size: 0.875rem;
-  color: var(--color-seal-dark);
+  color: var(--color-text);
   
   code {
-    color: var(--color-seal-dark);
-    background: rgba(180, 65, 46, 0.1);
+    color: var(--color-text);
+    background: var(--color-accent-tint);
   }
 `;
 

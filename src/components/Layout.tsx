@@ -4,22 +4,25 @@ import { Style, css } from "hono/css";
 export const globalStyles = css`
   :-hono-global {
     :root {
-      --color-primary: #1d2b4f;
-      --color-primary-dark: #121c36;
-      --color-primary-tint: rgba(29, 43, 79, 0.06);
-      --color-seal: #b4412e;
-      --color-seal-dark: #933322;
-      --color-bg: #e3e9ec;
-      --color-card: #fbfaf6;
-      --color-text: #1f2226;
-      --color-text-muted: #5e6670;
-      --color-border: #c9d1d6;
-      --color-rule: #9aa5ad;
-      --color-code-bg: #1d2b4f;
-      --color-code-text: #e8ecf2;
-      --color-code-comment: #d8b66a;
-      --font-mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
-      --font-gothic: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+      --color-primary: oklch(0.297 0.068 55);
+      --color-primary-dark: oklch(0.232 0.052 55);
+      --color-primary-tint: oklch(0.297 0.068 55 / 0.06);
+      --color-accent: oklch(0.533 0.153 55);
+      --color-accent-dark: oklch(0.458 0.133 55);
+      --color-accent-tint: oklch(0.533 0.153 55 / 0.06);
+      --color-accent-border: oklch(0.533 0.153 55 / 0.35);
+      --color-bg: oklch(0.93 0.008 55);
+      --color-card: oklch(0.985 0.005 55);
+      --color-card-hover: oklch(0.915 0.015 55);
+      --color-text: #000000;
+      --color-text-muted: rgb(0 0 0 / 0.6);
+      --color-text-strong: oklch(0.251 0.009 55);
+      --color-on-dark: #ffffff;
+      --color-on-dark-muted: rgb(255 255 255 / 0.6);
+      --color-border: oklch(0.856 0.011 55);
+      --color-rule: oklch(0.716 0.017 55);
+      --color-code-bg: oklch(0.2 0.035 55);
+      --font-sans: "IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
       --font-code: "M PLUS 1 Code", "SF Mono", Consolas, monospace;
     }
   
@@ -30,7 +33,7 @@ export const globalStyles = css`
     }
   
     body {
-      font-family: var(--font-gothic);
+      font-family: var(--font-sans);
       background: var(--color-bg);
       color: var(--color-text);
       line-height: 1.7;
@@ -43,7 +46,7 @@ export const globalStyles = css`
     }
   
     code {
-      color: var(--color-primary);
+      color: var(--color-text);
       background: var(--color-primary-tint);
       padding: 0.0625rem 0.375rem;
       border-radius: 2px;
@@ -68,7 +71,6 @@ export const globalStyles = css`
     }
   
     th {
-      font-family: var(--font-mincho);
       font-weight: 600;
       font-size: 0.875rem;
       color: var(--color-text-muted);
@@ -87,29 +89,10 @@ export const globalStyles = css`
     }
   
     section h2 {
-      font-family: var(--font-mincho);
-      font-size: 1.375rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--color-primary);
-      margin: 0 0 0.75rem 0.25rem;
-    }
-  
-    @media (min-width: 768px) {
-      section {
-        display: grid;
-        grid-template-columns: 3.5rem 1fr;
-        align-items: start;
-      }
-  
-      section h2 {
-        writing-mode: vertical-rl;
-        margin: 0;
-        padding: 0.25rem 0 0.75rem;
-        border-left: 1px solid var(--color-primary);
-        padding-left: 0.5rem;
-        justify-self: center;
-      }
+      color: var(--color-text);
+      margin: 0 0 0.75rem;
     }
   
     @media (max-width: 640px) {
@@ -152,7 +135,7 @@ export const cardClass = css`
 
 export const codeBlockClass = css`
   background: var(--color-code-bg);
-  color: var(--color-code-text);
+  color: var(--color-on-dark);
   padding: 1.25rem 1.5rem;
   border-radius: 2px;
   overflow-x: auto;
@@ -180,7 +163,7 @@ export const Layout: FC<LayoutProps> = ({ children, baseUrl }) => {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@400;500&family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=M+PLUS+1+Code:wght@400;500&display=swap"
         />
         <Style />
       </head>

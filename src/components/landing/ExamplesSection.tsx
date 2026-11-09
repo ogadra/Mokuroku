@@ -3,7 +3,7 @@ import { css } from "hono/css";
 import { containerClass, codeBlockClass } from "../Layout";
 
 const commentClass = css`
-  color: var(--color-code-comment);
+  color: var(--color-on-dark-muted);
 `;
 
 const examples = `# すべてのイベント
