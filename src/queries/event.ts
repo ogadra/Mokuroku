@@ -1,4 +1,15 @@
-import { and, eq, getTableColumns, gte, inArray, isNotNull, type SQL } from "drizzle-orm";
+import {
+  and,
+  eq,
+  getTableColumns,
+  gte,
+  inArray,
+  isNotNull,
+  ne,
+  or,
+  sql,
+  type SQL,
+} from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import * as schema from "../repository/schema";
 import { events } from "../repository/schema";
@@ -63,8 +74,18 @@ export const deleteEvent = async (db: Database, uid: string): Promise<boolean> =
   return result.length > 0;
 };
 
-export const upsertEventByConnpassId = async (db: Database, data: NewEvent): Promise<Event> => {
-  const result = await db
+const syncedColumns = [
+  events.summary,
+  events.dtstart,
+  events.dtend,
+  events.location,
+  events.description,
+  events.status,
+  events.attendeeType,
+];
+
+export const upsertEventByConnpassId = async (db: Database, data: NewEvent): Promise<void> => {
+  await db
     .insert(events)
     .values(data)
     .onConflictDoUpdate({
@@ -78,9 +99,10 @@ export const upsertEventByConnpassId = async (db: Database, data: NewEvent): Pro
         status: data.status,
         attendeeType: data.attendeeType,
       },
-    })
-    .returning();
-  return result[0];
+      setWhere: or(
+        ...syncedColumns.map((column) => ne(column, sql.raw(`excluded.${column.name}`))),
+      ),
+    });
 };
 
 export const findSyncedFutureEvents = async (db: Database, from: Date): Promise<Event[]> => {
