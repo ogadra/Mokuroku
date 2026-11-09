@@ -221,7 +221,7 @@ const UrlBuilderApp = () => {
             class={`${swipeArrowClass} ${isIcal ? swipeArrowHiddenClass : ""}`}
             onClick={() => setFormat(FORMAT.ICAL)}
             aria-label="iCalに切り替え"
-            style={{ left: "-1rem" }}
+            style={{ left: "-1.75rem" }}
           >
             <ChevronLeftIcon />
           </button>
@@ -229,7 +229,7 @@ const UrlBuilderApp = () => {
             class={`${swipeArrowClass} ${isRss ? swipeArrowHiddenClass : ""}`}
             onClick={() => setFormat(FORMAT.RSS)}
             aria-label="RSSに切り替え"
-            style={{ right: "-1rem" }}
+            style={{ right: "-1.75rem" }}
           >
             <ChevronRightIcon />
           </button>

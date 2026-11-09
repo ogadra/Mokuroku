@@ -3,13 +3,28 @@ import { css } from "hono/css";
 import { containerClass, cardClass } from "../Layout";
 
 const noteClass = css`
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   padding: 0.75rem 1rem;
-  background: #feebc8;
-  border-radius: 6px;
+  background: rgba(180, 65, 46, 0.06);
+  border: 1px solid rgba(180, 65, 46, 0.35);
+  border-radius: 2px;
   font-size: 0.875rem;
-  color: #c05621;
-  border-left: 3px solid #dd6b20;
+  color: var(--color-seal-dark);
+  
+  code {
+    color: var(--color-seal-dark);
+    background: rgba(180, 65, 46, 0.1);
+  }
+`;
+
+const tableClass = css`
+  td:last-child {
+    font-weight: 500;
+  }
+  
+  tbody tr:last-child td {
+    border-bottom: 1px solid var(--color-primary);
+  }
 `;
 
 const parameters = [
@@ -25,7 +40,7 @@ export const ParameterTable: FC = () => {
     <section id="parameters" class={containerClass}>
       <h2>クエリパラメータ</h2>
       <div class={cardClass}>
-        <table>
+        <table class={tableClass}>
           <thead>
             <tr>
               <th>パラメータ</th>

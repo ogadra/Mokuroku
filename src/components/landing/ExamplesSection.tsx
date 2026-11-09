@@ -1,6 +1,6 @@
 import type { FC } from "hono/jsx";
 import { css } from "hono/css";
-import { containerClass, cardClass, codeBlockClass } from "../Layout";
+import { containerClass, codeBlockClass } from "../Layout";
 
 const commentClass = css`
   color: var(--color-code-comment);
@@ -28,16 +28,14 @@ export const ExamplesSection: FC = () => {
   return (
     <section id="examples" class={containerClass}>
       <h2>使用例</h2>
-      <div class={cardClass}>
-        <pre class={codeBlockClass}>
-          {lines.map((line, i) => (
-            <>
-              {line.startsWith("#") ? <span class={commentClass}>{line}</span> : line}
-              {i < lines.length - 1 && "\n"}
-            </>
-          ))}
-        </pre>
-      </div>
+      <pre class={codeBlockClass}>
+        {lines.map((line, i) => (
+          <>
+            {line.startsWith("#") ? <span class={commentClass}>{line}</span> : line}
+            {i < lines.length - 1 && "\n"}
+          </>
+        ))}
+      </pre>
     </section>
   );
 };
