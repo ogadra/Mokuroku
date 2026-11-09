@@ -1,4 +1,4 @@
-import type { Event } from "../repository/types/events";
+import type { PublicEvent } from "../repository/types/events";
 import { buildEventTitle } from "./eventPrefix";
 
 const escapeXml = (str: string): string => {
@@ -14,7 +14,11 @@ const formatRFC822Date = (date: Date): string => {
   return date.toUTCString();
 };
 
-export const generateRSS = (events: Event[], addRolePrefix: boolean, baseUrl: string): string => {
+export const generateRSS = (
+  events: PublicEvent[],
+  addRolePrefix: boolean,
+  baseUrl: string,
+): string => {
   const lastBuildDate =
     events.length > 0
       ? formatRFC822Date(new Date(Math.max(...events.map((e) => e.lastModified.getTime()))))

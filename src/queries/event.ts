@@ -1,22 +1,25 @@
-import { and, eq, gte, inArray, isNotNull, type SQL } from "drizzle-orm";
+import { and, eq, getTableColumns, gte, inArray, isNotNull, type SQL } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import * as schema from "../repository/schema";
 import { events } from "../repository/schema";
-import type { Event, NewEvent } from "../repository/types/events";
+import type { Event, NewEvent, PublicEvent } from "../repository/types/events";
 import type { AttendeeType } from "../repository/enums/attendeeType";
 import { EVENT_STATUS, type EventStatusType } from "../repository/enums/eventStatus";
 
 type Database = DrizzleD1Database<typeof schema>;
 
-export const findAllEvents = async (db: Database): Promise<Event[]> => {
-  return db.select().from(events);
+// connpassEventId is only for the sync job, so queries serving /event, ics and rss leave it out
+const { connpassEventId: _, ...publicColumns } = getTableColumns(events);
+
+export const findAllEvents = async (db: Database): Promise<PublicEvent[]> => {
+  return db.select(publicColumns).from(events);
 };
 
 export const findEventsByFilter = async (
   db: Database,
   role?: AttendeeType,
   status?: EventStatusType,
-): Promise<Event[]> => {
+): Promise<PublicEvent[]> => {
   const conditions: SQL[] = [];
   if (role) {
     conditions.push(eq(events.attendeeType, role));
@@ -25,21 +28,21 @@ export const findEventsByFilter = async (
     conditions.push(eq(events.status, status));
   }
   if (conditions.length === 0) {
-    return db.select().from(events);
+    return db.select(publicColumns).from(events);
   }
   return db
-    .select()
+    .select(publicColumns)
     .from(events)
     .where(and(...conditions));
 };
 
-export const findEventByUid = async (db: Database, uid: string): Promise<Event | null> => {
-  const result = await db.select().from(events).where(eq(events.uid, uid));
+export const findEventByUid = async (db: Database, uid: string): Promise<PublicEvent | null> => {
+  const result = await db.select(publicColumns).from(events).where(eq(events.uid, uid));
   return result[0] ?? null;
 };
 
-export const createEvent = async (db: Database, data: NewEvent): Promise<Event> => {
-  const result = await db.insert(events).values(data).returning();
+export const createEvent = async (db: Database, data: NewEvent): Promise<PublicEvent> => {
+  const result = await db.insert(events).values(data).returning(publicColumns);
   return result[0];
 };
 
@@ -47,8 +50,12 @@ export const updateEvent = async (
   db: Database,
   uid: string,
   data: Partial<NewEvent>,
-): Promise<Event | null> => {
-  const result = await db.update(events).set(data).where(eq(events.uid, uid)).returning();
+): Promise<PublicEvent | null> => {
+  const result = await db
+    .update(events)
+    .set(data)
+    .where(eq(events.uid, uid))
+    .returning(publicColumns);
   return result[0] ?? null;
 };
 

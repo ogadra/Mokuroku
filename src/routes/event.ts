@@ -11,17 +11,13 @@ import {
 import type { AppEnv } from "../types/env";
 import { requireAuth } from "../middleware/auth";
 import { createEventSchema, updateEventSchema } from "../schemas/event";
-import type { Event } from "../repository/types/events";
 
 const eventRoutes = new Hono<AppEnv>();
-
-// The sync job needs connpassEventId in queries, so it is dropped here rather than left out of the select
-const toPublicEvent = ({ connpassEventId: _, ...event }: Event) => event;
 
 // GET /event - イベント一覧取得
 eventRoutes.get("/", async (c) => {
   const eventData = await findAllEvents(c.var.db);
-  return c.json(eventData.map(toPublicEvent));
+  return c.json(eventData);
 });
 
 // GET /event/:uid - 単一イベント取得
@@ -31,7 +27,7 @@ eventRoutes.get("/:uid", async (c) => {
   if (!event) {
     throw new HTTPException(404, { message: "Event not found" });
   }
-  return c.json(toPublicEvent(event));
+  return c.json(event);
 });
 
 // POST /event - イベント作成
@@ -46,7 +42,7 @@ eventRoutes.post("/", requireAuth, async (c) => {
     dtstart: new Date(parsed.output.dtstart),
     dtend: new Date(parsed.output.dtend),
   });
-  return c.json(toPublicEvent(result), 201);
+  return c.json(result, 201);
 });
 
 // PUT /event/:uid - イベント更新
@@ -68,7 +64,7 @@ eventRoutes.put("/:uid", requireAuth, async (c) => {
   if (!result) {
     throw new HTTPException(404, { message: "Event not found" });
   }
-  return c.json(toPublicEvent(result));
+  return c.json(result);
 });
 
 // DELETE /event/:uid - イベント削除
