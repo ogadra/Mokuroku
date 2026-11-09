@@ -8,7 +8,6 @@ import { EVENT_STATUS, type EventStatusType } from "../repository/enums/eventSta
 
 type Database = DrizzleD1Database<typeof schema>;
 
-// connpassEventId is only for the sync job, so queries serving /event, ics and rss leave it out
 const { connpassEventId: _, ...publicColumns } = getTableColumns(events);
 
 export const findAllEvents = async (db: Database): Promise<PublicEvent[]> => {
