@@ -15,8 +15,8 @@ import { sleep } from "../utils/sleep";
 
 type Database = DrizzleD1Database<typeof schema>;
 
-/** @description Interval between connpass requests; the API allows at most 1 request per second */
-const REQUEST_INTERVAL_MS = 1500;
+/** @description Interval between connpass requests, longer than the 10 seconds at which connpass returned 429 */
+const REQUEST_INTERVAL_MS = 20_000;
 
 /**
  * Sync upcoming connpass events into the events table.
@@ -30,7 +30,7 @@ export const syncConnpassEvents = async (
   apiKey: string,
   now: Date,
 ): Promise<void> => {
-  // connpass allows at most 1 request per second, so fetch sequentially with a gap between calls
+  // connpass rejects requests sent close together, so fetch sequentially with a gap between calls
   const participatedEvents = await fetchParticipatedEvents(apiKey, now);
   await sleep(REQUEST_INTERVAL_MS);
   const presenterEventIds = await fetchPresenterEventIds(apiKey);
